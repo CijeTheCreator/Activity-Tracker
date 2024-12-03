@@ -1,9 +1,5 @@
 import { ReactNode } from "react";
 
-// Card: Total time
-// Card: Total projects
-// Card: Total collaborators
-// Card: Total actions
 export type TCard = {
   title: string;
   content: string;
@@ -11,23 +7,12 @@ export type TCard = {
   subtext: string;
 };
 
-// Calendar Heatmap : We will be using react-calendar-heatmap
-// <CalendarHeatmap
-//   values={[
-//     { date: '2016-01-01', count: 12 },
-//     { date: '2016-01-22', count: 122 },
-//     { date: '2016-01-30', count: 38 },
-//     // ...and so on
-//   ]}
-// />
-
 type TValue = {
-  date: string; // ISO 8601 date string
-  count: number; // Numerical count
+  date: string;
+  count: number;
 };
-export type TValues = TValue[]; // Array of Value objects
+export type TValues = TValue[];
 
-// Piechart: All projects
 type ChartDataEntry = {
   project: string;
   hours: number;
@@ -44,7 +29,6 @@ export type ChartConfig = {
   hours: { label: string };
 } & Record<string, ChartConfigEntry>;
 
-// Area Chart Day: Total Time spent
 export type AreaDayChartDataEntry = {
   day: string;
 } & Record<string, string>;
@@ -53,7 +37,6 @@ export type AreaDayChartConfig = {
   hours: { label: string };
 } & Record<string, ChartConfigEntry>;
 
-// Area Chart Month: Total Time spent
 export type AreaMonthChartDataEntry = {
   month: string;
 } & Record<string, string>;
@@ -62,7 +45,6 @@ export type AreaMonthChartConfig = {
   hours: { label: string };
 } & Record<string, ChartConfigEntry>;
 
-// Area Chart Year: Total Time spent
 export type AreaYearChartDataEntry = {
   year: string;
 } & Record<string, string>;
@@ -71,7 +53,6 @@ export type AreaYearChartConfig = {
   hours: { label: string };
 } & Record<string, ChartConfigEntry>;
 
-// Line Chart Day: Total Time spent
 export type LineDayChartDataEntry = {
   day: string;
 } & Record<string, string>;
@@ -80,7 +61,6 @@ export type LineDayChartConfig = {
   hours: { label: string };
 } & Record<string, ChartConfigEntry>;
 
-// Area Chart Month: Total Time spent
 export type LineMonthChartDataEntry = {
   month: string;
 } & Record<string, string>;
@@ -89,14 +69,15 @@ export type LineMonthChartConfig = {
   hours: { label: string };
 } & Record<string, ChartConfigEntry>;
 
-// Area Chart Year: Total Time spent
 export type LineYearChartDataEntry = {
   year: string;
 } & Record<string, string>;
 export type LineYearChartData = LineYearChartDataEntry[];
+
 export type LineYearChartConfig = {
   hours: { label: string };
 } & Record<string, ChartConfigEntry>;
+
 export type PenpotDataProcessed = {
   timespent: number;
   start: number;
