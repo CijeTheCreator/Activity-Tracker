@@ -4,7 +4,6 @@ export type TCard = {
   title: string;
   content: string;
   icon: ReactNode;
-  subtext: string;
 };
 
 type TValue = {
@@ -43,7 +42,7 @@ type ChartConfigEntry = {
 };
 
 export type ChartConfig = {
-  hours: { label: string };
+  [key: string]: { label: string; color?: string };
 } & Partial<Record<string, ChartConfigEntry>>;
 
 export type AreaChartDataEntry = (
@@ -63,8 +62,15 @@ export type LineDayChartConfig = {
   hours: { label: string };
 } & Partial<Record<string, ChartConfigEntry>>;
 
+export type PenpotDataRaw = {
+  start: number;
+  project: string;
+  page: string;
+  change: string;
+  collaborators: string[];
+};
 export type PenpotDataProcessed = {
-  timespent: number;
+  timespent?: number;
   start: number;
   project: string;
   page: string;

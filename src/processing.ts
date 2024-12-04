@@ -1,21 +1,60 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
-  ActionDataMany,
+  ActionData,
   AreaChartData,
   AreaChartDataEntry,
+  ChartConfig,
   ChartData,
-  ChartDataMany,
   CollaboratorData,
   CollaboratorDataEntry,
   PenpotDataProcessed,
+  PenpotDataRaw,
   TCard,
   TValues,
 } from "./lib/types";
 
+const PRIMARY_COLOR = "hsl(164, 86%, 16%)";
+
+export const COLOR_PALLETE = [
+  "hsl(173, 58%, 39%)",
+  "hsl(43, 74%, 66%)",
+  "hsl(197, 37%, 24%)",
+  "hsl(27, 87%, 67%)",
+  "hsl(12, 76%, 61%)",
+  "hsl(186, 55%, 42%)",
+  "hsl(47, 70%, 63%)",
+  "hsl(202, 35%, 26%)",
+  "hsl(30, 83%, 64%)",
+  "hsl(14, 70%, 58%)",
+  "hsl(165, 60%, 40%)",
+  "hsl(50, 72%, 65%)",
+  "hsl(210, 34%, 28%)",
+  "hsl(33, 85%, 62%)",
+  "hsl(16, 74%, 59%)",
+];
+
+export function mapItemToColor(items: string[]): { [key: string]: string } {
+  const itemMap: { [key: string]: string } = {};
+  items.forEach((value, index) => {
+    let color;
+
+    if (index >= COLOR_PALLETE.length) {
+      color = COLOR_PALLETE[COLOR_PALLETE.length - 1];
+    } else {
+      color = COLOR_PALLETE[index];
+    }
+
+    itemMap[value] = color;
+
+    return itemMap;
+  });
+  return itemMap;
+}
+
 //Client determines the range by passing equivalent segment data
 export function getHorizontalBarChartProjectsWorkedOnData2(
   processedPenpotData: PenpotDataProcessed[][],
-): ChartDataMany {
+): { chartData: ChartData; chartConfig: ChartConfig }[] {
   return getProjectsWorkedOnData(processedPenpotData);
 }
 
@@ -29,7 +68,7 @@ function getCollaboratorData(
     const collaboratorDataEntry: CollaboratorDataEntry = {
       collaborators: 0,
       day: "",
-      fill: "",
+      fill: PRIMARY_COLOR,
     };
     collaboratorDataEntry[range] = penpotDataSegment[0].datetime!;
     const totalCollaborators = aggregateCollaborators(penpotDataSegment);
@@ -41,51 +80,98 @@ function getCollaboratorData(
 
 function getActionsPerformedData(
   processedPenpotData: PenpotDataProcessed[][],
-): ActionDataMany {
+): { chartData: ActionData; chartConfig: ChartConfig }[] {
   return processedPenpotData.map((value) => {
     const actionsPerformed = aggregateActionsPerformedData(value);
-    return actionsPerformed.map((innerValue) => {
+    const fillMap = mapItemToColor(
+      actionsPerformed.map((value) => value.uniqueAction),
+    );
+    const chartConfig: {
+      [key: string]: { label: string; color?: string };
+      hours: { label: string; color?: string };
+    } = generateChartconfig(fillMap);
+    const chartData = actionsPerformed.map((innerValue) => {
       return {
         actionPerformed: innerValue.uniqueAction,
         hours: innerValue.totalTimespentOnAction,
-        fill: "",
+        fill: fillMap[innerValue.uniqueAction],
       };
     });
+    return { chartData, chartConfig };
   });
 }
+
 function getProjectsWorkedOnData(
   processedPenpotData: PenpotDataProcessed[][],
-): ChartDataMany {
+): { chartData: ChartData; chartConfig: ChartConfig }[] {
   return processedPenpotData.map((value) => {
     const totalTimeSpentOnProject = aggregrateTotalTimeSpent(value);
-    return totalTimeSpentOnProject.map((innerValue) => {
+    const fillMap = mapItemToColor(
+      totalTimeSpentOnProject.map((value) => value.uniqueProject),
+    );
+    const chartConfig: {
+      [key: string]: { label: string; color?: string };
+      hours: { label: string; color?: string };
+    } = generateChartconfig(fillMap);
+    const chartData = totalTimeSpentOnProject.map((innerValue) => {
       return {
         project: innerValue.uniqueProject,
         hours: innerValue.totalTimeSpentOnProject,
-        fill: "",
+        fill: fillMap[innerValue.uniqueProject],
       };
     });
+    return { chartData, chartConfig };
   });
+}
+
+function generateChartconfigSingleData(key: string) {
+  const chartConfig: {
+    [key: string]: { label: string; color?: string };
+  } = {};
+  chartConfig[key] = {
+    label: key, //TODO: Might need to do some formatting here
+    color: PRIMARY_COLOR,
+  };
+  return chartConfig;
+}
+function generateChartconfig(fillMap: { [key: string]: string }) {
+  const chartConfig: {
+    [key: string]: { label: string; color?: string };
+    hours: { label: string; color?: string };
+  } = {
+    hours: {
+      label: "Hours",
+    },
+  };
+  Object.keys(fillMap).forEach((value) => {
+    chartConfig[value] = {
+      label: value, //TODO: Might need to do some formatting here
+      color: fillMap[value],
+    };
+  });
+  return chartConfig;
 }
 
 export function getPieChartActionsPerformedData5(
   processedPenpotData: PenpotDataProcessed[][],
-): ActionDataMany {
+): { chartData: ActionData; chartConfig: ChartConfig }[] {
   return getActionsPerformedData(processedPenpotData);
 }
 
 //Client determines the range by passing equivalent segment data
 export function getPieChartProjectsWorkedOnData3(
   processedPenpotData: PenpotDataProcessed[][],
-): ChartDataMany {
+): { chartData: ChartData; chartConfig: ChartConfig }[] {
   return getProjectsWorkedOnData(processedPenpotData);
 }
 
 export function getLineChartCollaboratorsData4(
   processedPenpotData: PenpotDataProcessed[][],
   range: "day" | "month" | "year",
-): CollaboratorData {
-  return getCollaboratorData(processedPenpotData, range);
+): { chartData: CollaboratorData; chartConfig: ChartConfig } {
+  const chartData = getCollaboratorData(processedPenpotData, range);
+  const chartConfig = generateChartconfigSingleData(range);
+  return { chartData, chartConfig };
 }
 
 export function getTotalCollaborators9(
@@ -142,7 +228,7 @@ export function getTotalActions8(
 export function getCalendarHeatMapData7(
   processedPenpotData: PenpotDataProcessed[][],
 ): TValues {
-  const calendarHeatMapArray = generateAreaChartData(
+  const { chartData: calendarHeatMapArray } = generateAreaChartDataAndConfigs(
     "day",
     processedPenpotData,
   );
@@ -156,40 +242,69 @@ export function getCalendarHeatMapData7(
 
 export function getPieChartAllProjects6(
   processedPenpotData: PenpotDataProcessed[],
-): ChartData {
-  return aggregrateTotalTimeSpent(processedPenpotData).map((value) => {
+): { chartData: ChartData; chartConfig: ChartConfig } {
+  const totalTimeSpentAggregated =
+    aggregrateTotalTimeSpent(processedPenpotData);
+  const fillMap = mapItemToColor(
+    totalTimeSpentAggregated.map((value) => value.uniqueProject),
+  );
+  const chartConfig: {
+    [key: string]: { label: string; color?: string };
+    hours: { label: string; color?: string };
+  } = generateChartconfig(fillMap);
+  const chartData = totalTimeSpentAggregated.map((value) => {
     return {
       project: value.uniqueProject,
       hours: value.totalTimeSpentOnProject,
-      fill: "",
+      fill: fillMap[value.uniqueProject],
     };
   });
+  return { chartData, chartConfig };
 }
 
 //The Client does the segmenting
 export function getAreaChartTimeSpentData1(
   processedPenpotData: PenpotDataProcessed[][],
   range: "day" | "month" | "year",
-): AreaChartData {
-  const areaChartData = generateAreaChartData(range, processedPenpotData);
-  return areaChartData;
+): { data: AreaChartData; config: ChartConfig } {
+  const { chartData: areaChartData, chartConfigs: chartConfig } =
+    generateAreaChartDataAndConfigs(range, processedPenpotData);
+  return { data: areaChartData, config: chartConfig };
 }
-function generateAreaChartData(
+function generateAreaChartDataAndConfigs(
   range: "day" | "month" | "year",
   processedPenpotData: PenpotDataProcessed[][],
 ) {
   const areaChartData = [];
+  const chartConfig: {
+    [key: string]: { label: string; color?: string };
+    hours: { label: string; color?: string };
+  } = {
+    hours: {
+      label: "Hours",
+    },
+  };
   for (let i = 0; i < processedPenpotData.length; i++) {
     const penpotDataSegment = processedPenpotData[i];
     const areaChartDataEntry: AreaChartDataEntry = { day: "" };
     areaChartDataEntry[range] = penpotDataSegment[0].datetime!;
     const totalTimeSpentOnProject = aggregrateTotalTimeSpent(penpotDataSegment);
+
+    const fillMap = mapItemToColor(
+      totalTimeSpentOnProject.map((value) => value.uniqueProject),
+    );
+    Object.keys(fillMap).forEach((value) => {
+      chartConfig[value] = {
+        label: value, //TODO: Might need to do some formatting here
+        color: fillMap[value],
+      };
+    });
     totalTimeSpentOnProject.forEach((value) => {
       areaChartDataEntry[value.uniqueProject] = value.totalTimeSpentOnProject;
     });
     areaChartData.push(areaChartDataEntry);
   }
-  return areaChartData;
+  return { chartData: areaChartData, chartConfigs: chartConfig };
 }
 
 function aggregateCollaborators(processedPenpotData: PenpotDataProcessed[]) {
@@ -286,4 +401,16 @@ export function segmentPenpotData(
     return a[0].start - b[0].start;
   });
   return sortedOuterSegmentedData;
+}
+
+function processPenpotData(rawPenpotData: PenpotDataRaw[]) {
+  const processedPenpotDataArray = [];
+  for (let i = 1; i < rawPenpotData.length; i++) {
+    const rawPenpotDataUnit: PenpotDataProcessed = rawPenpotData[
+      i
+    ] as PenpotDataProcessed;
+    const previousPenpotDataUnit = rawPenpotData[i - 1];
+    rawPenpotData["timespent"] =
+      rawPenpotDataUnit.start - previousPenpotDataUnit.start;
+  }
 }
