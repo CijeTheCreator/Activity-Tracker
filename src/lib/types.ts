@@ -31,7 +31,7 @@ export type ChartConfig = {
 
 export type AreaDayChartDataEntry = {
   day: string;
-} & Record<string, string>;
+} & Record<string, number>;
 export type AreaDayChartData = AreaDayChartDataEntry[];
 export type AreaDayChartConfig = {
   hours: { label: string };
@@ -39,7 +39,7 @@ export type AreaDayChartConfig = {
 
 export type AreaMonthChartDataEntry = {
   month: string;
-} & Record<string, string>;
+} & Record<string, number>;
 export type AreaMonthChartData = AreaMonthChartDataEntry[];
 export type AreaMonthChartConfig = {
   hours: { label: string };
@@ -47,7 +47,7 @@ export type AreaMonthChartConfig = {
 
 export type AreaYearChartDataEntry = {
   year: string;
-} & Record<string, string>;
+} & Record<string, number>;
 export type AreaYearChartData = AreaYearChartDataEntry[];
 export type AreaYearChartConfig = {
   hours: { label: string };
@@ -55,7 +55,7 @@ export type AreaYearChartConfig = {
 
 export type LineDayChartDataEntry = {
   day: string;
-} & Record<string, string>;
+} & Record<string, number>;
 export type LineDayChartData = LineDayChartDataEntry[];
 export type LineDayChartConfig = {
   hours: { label: string };
@@ -63,7 +63,7 @@ export type LineDayChartConfig = {
 
 export type LineMonthChartDataEntry = {
   month: string;
-} & Record<string, string>;
+} & Record<string, number>;
 export type LineMonthChartData = LineMonthChartDataEntry[];
 export type LineMonthChartConfig = {
   hours: { label: string };
@@ -71,7 +71,7 @@ export type LineMonthChartConfig = {
 
 export type LineYearChartDataEntry = {
   year: string;
-} & Record<string, string>;
+} & Record<string, number>;
 export type LineYearChartData = LineYearChartDataEntry[];
 
 export type LineYearChartConfig = {
@@ -85,4 +85,5 @@ export type PenpotDataProcessed = {
   page: string;
   change: string;
   collaborators: string[];
+  datetime?: string;
 };
