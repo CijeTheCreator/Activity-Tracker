@@ -19,6 +19,23 @@ type ChartDataEntry = {
   fill: string;
 };
 export type ChartData = ChartDataEntry[];
+export type ChartDataMany = ChartData[];
+
+export type ActionDataEntry = {
+  actionPerformed: string;
+  hours: number;
+  fill: string;
+};
+export type ActionData = ActionDataEntry[];
+export type ActionDataMany = ActionData[];
+
+export type CollaboratorDataEntry = {
+  collaborators: number;
+  fill: string;
+  [key: string]: string | number;
+} & ({ day: string } | { month: string } | { year: string });
+export type CollaboratorData = CollaboratorDataEntry[];
+export type CollaboratorDataMany = CollaboratorData[];
 
 type ChartConfigEntry = {
   label: string;
@@ -27,56 +44,24 @@ type ChartConfigEntry = {
 
 export type ChartConfig = {
   hours: { label: string };
-} & Record<string, ChartConfigEntry>;
+} & Partial<Record<string, ChartConfigEntry>>;
 
-export type AreaDayChartDataEntry = {
-  day: string;
-} & Record<string, number>;
-export type AreaDayChartData = AreaDayChartDataEntry[];
-export type AreaDayChartConfig = {
+export type AreaChartDataEntry = (
+  | { day: string }
+  | { month: string }
+  | { year: string }
+) &
+  Record<string, string | number>;
+export type AreaChartData = AreaChartDataEntry[];
+export type AreaChartConfig = {
   hours: { label: string };
-} & Record<string, ChartConfigEntry>;
+} & Partial<Record<string, ChartConfigEntry>>;
 
-export type AreaMonthChartDataEntry = {
-  month: string;
-} & Record<string, number>;
-export type AreaMonthChartData = AreaMonthChartDataEntry[];
-export type AreaMonthChartConfig = {
-  hours: { label: string };
-} & Record<string, ChartConfigEntry>;
-
-export type AreaYearChartDataEntry = {
-  year: string;
-} & Record<string, number>;
-export type AreaYearChartData = AreaYearChartDataEntry[];
-export type AreaYearChartConfig = {
-  hours: { label: string };
-} & Record<string, ChartConfigEntry>;
-
-export type LineDayChartDataEntry = {
-  day: string;
-} & Record<string, number>;
+export type LineDayChartDataEntry = AreaChartDataEntry;
 export type LineDayChartData = LineDayChartDataEntry[];
 export type LineDayChartConfig = {
   hours: { label: string };
-} & Record<string, ChartConfigEntry>;
-
-export type LineMonthChartDataEntry = {
-  month: string;
-} & Record<string, number>;
-export type LineMonthChartData = LineMonthChartDataEntry[];
-export type LineMonthChartConfig = {
-  hours: { label: string };
-} & Record<string, ChartConfigEntry>;
-
-export type LineYearChartDataEntry = {
-  year: string;
-} & Record<string, number>;
-export type LineYearChartData = LineYearChartDataEntry[];
-
-export type LineYearChartConfig = {
-  hours: { label: string };
-} & Record<string, ChartConfigEntry>;
+} & Partial<Record<string, ChartConfigEntry>>;
 
 export type PenpotDataProcessed = {
   timespent: number;
