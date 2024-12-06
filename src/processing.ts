@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import CryptoJS from "crypto-js";
 import {
   ActionData,
   AreaChartData,
@@ -13,7 +14,9 @@ import {
   TValues,
 } from "./lib/types";
 
-const PRIMARY_COLOR = "hsl(164, 86%, 16%)";
+export const PRIMARY_COLOR = "hsl(164, 86%, 16%)";
+export const PRIMARY_COLOR_HEX = "#064c39";
+export const INACTIVE_THRESHOLD = 120000;
 
 export const COLOR_PALLETE = [
   "hsl(173, 58%, 39%)",
@@ -205,7 +208,7 @@ export function getTotalTime11(
 ): TCard {
   let totalTimeSpent = 0;
   processedPenpotData.forEach((value) => {
-    totalTimeSpent = totalTimeSpent + value.timespent;
+    totalTimeSpent = totalTimeSpent + value.timespent!;
   });
   return {
     title: "Total time spent",
@@ -327,7 +330,7 @@ function aggregateActionsPerformedData(
       .filter((value) => value.project == uniqueAction)
       .map((value) => value.timespent)
       .forEach((value) => {
-        totalTimespentOnAction = totalTimespentOnAction + value;
+        totalTimespentOnAction = totalTimespentOnAction + value!;
       });
     totalTimeSpentPerformingAction.push({
       uniqueAction,
@@ -348,7 +351,7 @@ function aggregrateTotalTimeSpent(penpotDataSegment: PenpotDataProcessed[]) {
       .filter((value) => value.project == uniqueProject)
       .map((value) => value.timespent)
       .forEach((value) => {
-        totalTimeSpentOnProject = totalTimeSpentOnProject + value;
+        totalTimeSpentOnProject = totalTimeSpentOnProject + value!;
       });
     totalTimeSpentOnAllProjects.push({
       uniqueProject,
@@ -403,14 +406,30 @@ export function segmentPenpotData(
   return sortedOuterSegmentedData;
 }
 
-function processPenpotData(rawPenpotData: PenpotDataRaw[]) {
-  const processedPenpotDataArray = [];
-  for (let i = 1; i < rawPenpotData.length; i++) {
-    const rawPenpotDataUnit: PenpotDataProcessed = rawPenpotData[
-      i
-    ] as PenpotDataProcessed;
+export function processPenpotData(
+  rawPenpotData: PenpotDataRaw[],
+): PenpotDataProcessed[] {
+  const processedPenpotDataArray: PenpotDataProcessed[] = [];
+
+  for (let i = 0; i < rawPenpotData.length; i++) {
+    const rawPenpotDataUnit = rawPenpotData[i];
     const previousPenpotDataUnit = rawPenpotData[i - 1];
-    rawPenpotData["timespent"] =
+    const timedifference =
       rawPenpotDataUnit.start - previousPenpotDataUnit.start;
+    const processedUnit: PenpotDataProcessed = {
+      ...rawPenpotDataUnit,
+      timespent: timedifference < INACTIVE_THRESHOLD ? timedifference : 0,
+    };
+
+    processedPenpotDataArray.push(processedUnit);
   }
+
+  return processedPenpotDataArray.filter((value) => value.timespent! > 0);
+}
+
+export function encryptString(text: string, key: string) {
+  if (!text || !key) {
+    throw new Error("Both text and key are required for encryption.");
+  }
+  return CryptoJS.AES.encrypt(text, key).toString();
 }

@@ -1,3 +1,5 @@
+import { Board, Shape } from "@penpot/plugin-types";
+import { z } from "zod";
 import { ReactNode } from "react";
 
 export type TCard = {
@@ -76,5 +78,24 @@ export type PenpotDataProcessed = {
   page: string;
   change: string;
   collaborators: string[];
+  //Date time is inserted during segmentation
   datetime?: string;
 };
+
+export type ExtendedShape = Shape & { Da: { Lf: string } };
+export type ExtendedBoard = Board & { Da: { Lf: string } };
+//Lf is the changed shapes Id
+export function hasDaProperty(
+  event: Shape | Board,
+): event is
+  | (Shape & { Da: { Lf: string } })
+  | (Board & { Da: { Lf: string } }) {
+  return event && typeof event === "object" && "Da" in event;
+}
+
+export const UserKeyForm = z.object({
+  key: z.string().min(4, {
+    message: "Key must be at least 4 characters",
+  }),
+});
+export type TUserKeyForm = z.infer<typeof UserKeyForm>;
