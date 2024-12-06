@@ -19,7 +19,7 @@ type ChartDataEntry = {
   hours: number;
   fill: string;
 };
-export type ChartData = ChartDataEntry[];
+export type ChartData = ChartDataEntry[] | null;
 export type ChartDataMany = ChartData[];
 
 export type ActionDataEntry = {
@@ -27,7 +27,7 @@ export type ActionDataEntry = {
   hours: number;
   fill: string;
 };
-export type ActionData = ActionDataEntry[];
+export type ActionData = ActionDataEntry[] | null;
 export type ActionDataMany = ActionData[];
 
 export type CollaboratorDataEntry = {
@@ -43,9 +43,11 @@ type ChartConfigEntry = {
   color?: string;
 };
 
-export type ChartConfig = {
-  [key: string]: { label: string; color?: string };
-} & Partial<Record<string, ChartConfigEntry>>;
+export type ChartConfig =
+  | ({
+      [key: string]: { label: string; color?: string };
+    } & Partial<Record<string, ChartConfigEntry>>)
+  | null;
 
 export type AreaChartDataEntry = (
   | { day: string }

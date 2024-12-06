@@ -55,17 +55,32 @@ export function mapItemToColor(items: string[]): { [key: string]: string } {
 }
 
 //Client determines the range by passing equivalent segment data
+//Client passes in generatedRangeAsAnArgument generatedWithGenerateRange
 export function getHorizontalBarChartProjectsWorkedOnData2(
   processedPenpotData: PenpotDataProcessed[][],
-): { chartData: ChartData; chartConfig: ChartConfig }[] {
-  return getProjectsWorkedOnData(processedPenpotData);
+  range: "day" | "month" | "year",
+  generatedRange: string[],
+): {
+  chartData: ChartData;
+  chartConfig: ChartConfig;
+  start: number;
+  date: string;
+}[] {
+  return getProjectsWorkedOnData(processedPenpotData, range, generatedRange);
 }
 
 function getCollaboratorData(
   processedPenpotData: PenpotDataProcessed[][],
   range: "day" | "month" | "year",
+  generatedRange: string[],
 ): CollaboratorData {
-  const collaboratorData = [];
+  const collaboratorData: ({
+    [key: string]: string | number;
+    collaborators: number;
+    fill: string;
+  } & {
+    day: string;
+  })[] = [];
   for (let i = 0; i < processedPenpotData.length; i++) {
     const penpotDataSegment = processedPenpotData[i];
     const collaboratorDataEntry: CollaboratorDataEntry = {
@@ -78,14 +93,28 @@ function getCollaboratorData(
     collaboratorDataEntry["collaborators"] = totalCollaborators;
     collaboratorData.push(collaboratorDataEntry);
   }
-  return collaboratorData;
+  const filledAndSortedData = fillAndSortCollaboratorChartData(
+    generatedRange,
+    collaboratorData,
+    range,
+  );
+  return filledAndSortedData;
 }
 
 function getActionsPerformedData(
   processedPenpotData: PenpotDataProcessed[][],
-): { chartData: ActionData; chartConfig: ChartConfig }[] {
-  return processedPenpotData.map((value) => {
+  range: "day" | "month" | "year",
+  generatedRange: string[],
+): {
+  chartData: ActionData;
+  chartConfig: ChartConfig;
+  date: string;
+  start: number;
+}[] {
+  const mapData = processedPenpotData.map((value) => {
     const actionsPerformed = aggregateActionsPerformedData(value);
+    const start = value[0].start;
+    const date = getFormattedDate(range, value);
     const fillMap = mapItemToColor(
       actionsPerformed.map((value) => value.uniqueAction),
     );
@@ -100,15 +129,26 @@ function getActionsPerformedData(
         fill: fillMap[innerValue.uniqueAction],
       };
     });
-    return { chartData, chartConfig };
+    return { chartData, chartConfig, date, start };
   });
+  const filledAndSortedData = fillAndSortActionData(generatedRange, mapData);
+  return filledAndSortedData;
 }
 
 function getProjectsWorkedOnData(
   processedPenpotData: PenpotDataProcessed[][],
-): { chartData: ChartData; chartConfig: ChartConfig }[] {
-  return processedPenpotData.map((value) => {
+  range: "day" | "month" | "year",
+  generatedRange: string[],
+): {
+  chartData: ChartData;
+  chartConfig: ChartConfig;
+  date: string;
+  start: number;
+}[] {
+  const mapData = processedPenpotData.map((value) => {
     const totalTimeSpentOnProject = aggregrateTotalTimeSpent(value);
+    const start = value[0].start;
+    const date = getFormattedDate(range, value);
     const fillMap = mapItemToColor(
       totalTimeSpentOnProject.map((value) => value.uniqueProject),
     );
@@ -123,8 +163,74 @@ function getProjectsWorkedOnData(
         fill: fillMap[innerValue.uniqueProject],
       };
     });
-    return { chartData, chartConfig };
+    return { chartData, chartConfig, date, start };
   });
+  const filledAndSortedData = fillAndSortData(generatedRange, mapData);
+
+  return filledAndSortedData;
+}
+
+function fillAndSortActionData(
+  generatedRange: string[],
+  mapData: {
+    chartData: { actionPerformed: string; hours: number; fill: string }[];
+    chartConfig: {
+      [key: string]: { label: string; color?: string };
+      hours: { label: string; color?: string };
+    };
+    date: string;
+    start: number;
+  }[],
+) {
+  return generatedRange.map((value) => {
+    const equivalentMappedData = mapData.find((penpotdata) => {
+      return penpotdata.date == value;
+    });
+    if (equivalentMappedData) return equivalentMappedData;
+    return {
+      chartData: null,
+      chartConfig: null,
+      date: value,
+      start: getTimestamp(value),
+    };
+  });
+}
+function fillAndSortData(
+  generatedRange: string[],
+  mapData: {
+    chartData: { project: string; hours: number; fill: string }[];
+    chartConfig: {
+      [key: string]: { label: string; color?: string };
+      hours: { label: string; color?: string };
+    };
+    date: string;
+    start: number;
+  }[],
+) {
+  return generatedRange.map((value) => {
+    const equivalentMappedData = mapData.find((penpotdata) => {
+      return penpotdata.date == value;
+    });
+    if (equivalentMappedData) return equivalentMappedData;
+    return {
+      chartData: null,
+      chartConfig: null,
+      date: value,
+      start: getTimestamp(value),
+    };
+  });
+}
+
+function getFormattedDate(range: string, value: PenpotDataProcessed[]) {
+  if (range == "day") {
+    return value[0].datetime!;
+  } else if (range == "month") {
+    const splitDate = value[0].datetime!.split("-");
+    return `${splitDate[0]}-${splitDate[1]}`;
+  } else {
+    const splitDate = value[0].datetime!.split("-");
+    return `${splitDate[0]}`;
+  }
 }
 
 function generateChartconfigSingleData(key: string) {
@@ -157,22 +263,41 @@ function generateChartconfig(fillMap: { [key: string]: string }) {
 
 export function getPieChartActionsPerformedData5(
   processedPenpotData: PenpotDataProcessed[][],
-): { chartData: ActionData; chartConfig: ChartConfig }[] {
-  return getActionsPerformedData(processedPenpotData);
+  range: "day" | "month" | "year",
+  generatedRange: string[],
+): {
+  chartData: ActionData;
+  chartConfig: ChartConfig;
+  start: number;
+  date: string;
+}[] {
+  return getActionsPerformedData(processedPenpotData, range, generatedRange);
 }
 
 //Client determines the range by passing equivalent segment data
 export function getPieChartProjectsWorkedOnData3(
   processedPenpotData: PenpotDataProcessed[][],
-): { chartData: ChartData; chartConfig: ChartConfig }[] {
-  return getProjectsWorkedOnData(processedPenpotData);
+  range: "day" | "month" | "year",
+  generatedRange: string[],
+): {
+  chartData: ChartData;
+  chartConfig: ChartConfig;
+  start: number;
+  date: string;
+}[] {
+  return getProjectsWorkedOnData(processedPenpotData, range, generatedRange);
 }
 
 export function getLineChartCollaboratorsData4(
   processedPenpotData: PenpotDataProcessed[][],
   range: "day" | "month" | "year",
+  generatedRange: string[],
 ): { chartData: CollaboratorData; chartConfig: ChartConfig } {
-  const chartData = getCollaboratorData(processedPenpotData, range);
+  const chartData = getCollaboratorData(
+    processedPenpotData,
+    range,
+    generatedRange,
+  );
   const chartConfig = generateChartconfigSingleData(range);
   return { chartData, chartConfig };
 }
@@ -230,10 +355,12 @@ export function getTotalActions8(
 
 export function getCalendarHeatMapData7(
   processedPenpotData: PenpotDataProcessed[][],
+  generatedRange: string[],
 ): TValues {
   const { chartData: calendarHeatMapArray } = generateAreaChartDataAndConfigs(
     "day",
     processedPenpotData,
+    generatedRange,
   );
   return calendarHeatMapArray.map((value) => {
     return {
@@ -269,16 +396,20 @@ export function getPieChartAllProjects6(
 export function getAreaChartTimeSpentData1(
   processedPenpotData: PenpotDataProcessed[][],
   range: "day" | "month" | "year",
+  generatedRange: string[],
 ): { data: AreaChartData; config: ChartConfig } {
   const { chartData: areaChartData, chartConfigs: chartConfig } =
-    generateAreaChartDataAndConfigs(range, processedPenpotData);
+    generateAreaChartDataAndConfigs(range, processedPenpotData, generatedRange);
   return { data: areaChartData, config: chartConfig };
 }
 function generateAreaChartDataAndConfigs(
   range: "day" | "month" | "year",
   processedPenpotData: PenpotDataProcessed[][],
+  generatedRange: string[],
 ) {
-  const areaChartData = [];
+  const areaChartData: ({
+    day: string;
+  } & Record<string, string | number>)[] = [];
   const chartConfig: {
     [key: string]: { label: string; color?: string };
     hours: { label: string; color?: string };
@@ -307,7 +438,53 @@ function generateAreaChartDataAndConfigs(
     });
     areaChartData.push(areaChartDataEntry);
   }
-  return { chartData: areaChartData, chartConfigs: chartConfig };
+  const filledAndSortedData = fillAndSortAreaChartData(
+    generatedRange,
+    areaChartData,
+    range,
+  );
+  return { chartData: filledAndSortedData, chartConfigs: chartConfig };
+}
+
+function fillAndSortCollaboratorChartData(
+  generatedRange: string[],
+  collaboratorData: ({
+    [key: string]: string | number;
+    collaborators: number;
+    fill: string;
+  } & {
+    day: string;
+  })[],
+  range: string,
+) {
+  return generatedRange.map((value) => {
+    const equivalentMappedData = collaboratorData.find(
+      (chartdata) => chartdata[range] == value,
+    );
+    if (equivalentMappedData) return equivalentMappedData;
+    const collaboratorDataEntry: CollaboratorDataEntry = {
+      collaborators: 0,
+      day: "",
+      fill: PRIMARY_COLOR,
+    };
+    collaboratorDataEntry[range] = value;
+    return collaboratorDataEntry;
+  });
+}
+function fillAndSortAreaChartData(
+  generatedRange: string[],
+  areaChartData: ({ day: string } & Record<string, string | number>)[],
+  range: string,
+) {
+  return generatedRange.map((value) => {
+    const equivalentMappedData = areaChartData.find(
+      (chartdata) => chartdata[range] == value,
+    );
+    if (equivalentMappedData) return equivalentMappedData;
+    const emptyEntry: AreaChartDataEntry = { day: "" };
+    emptyEntry[range] = value;
+    return emptyEntry;
+  });
 }
 
 function aggregateCollaborators(processedPenpotData: PenpotDataProcessed[]) {
@@ -432,4 +609,77 @@ export function encryptString(text: string, key: string) {
     throw new Error("Both text and key are required for encryption.");
   }
   return CryptoJS.AES.encrypt(text, key).toString();
+}
+
+export function generateRange(
+  range: "day" | "month" | "year",
+  date: string,
+): string[] {
+  const result: string[] = [];
+  const inputDate = new Date(date);
+  const today = new Date();
+
+  if (isNaN(inputDate.getTime())) {
+    throw new Error("Invalid date format. Use YYYY-MM-DD.");
+  }
+
+  switch (range) {
+    case "day": {
+      const currentDay = new Date(today);
+      while (currentDay <= inputDate) {
+        result.push(currentDay.toISOString().split("T")[0]);
+        currentDay.setDate(currentDay.getDate() + 1);
+      }
+      break;
+    }
+
+    case "month": {
+      const currentMonth = new Date(today.getFullYear(), today.getMonth());
+      const targetMonth = new Date(
+        inputDate.getFullYear(),
+        inputDate.getMonth(),
+      );
+      while (currentMonth <= targetMonth) {
+        const year = currentMonth.getFullYear();
+        const month = (currentMonth.getMonth() + 1).toString().padStart(2, "0");
+        result.push(`${year}-${month}`);
+        currentMonth.setMonth(currentMonth.getMonth() + 1);
+      }
+      break;
+    }
+
+    case "year": {
+      let currentYear = today.getFullYear();
+      const targetYear = inputDate.getFullYear();
+      while (currentYear <= targetYear) {
+        result.push(currentYear.toString());
+        currentYear++;
+      }
+      break;
+    }
+    default:
+      throw new Error("Invalid range type. Use 'day', 'month', or 'year'.");
+  }
+
+  return result;
+}
+
+function getTimestamp(date: string): number {
+  const yearPattern = /^\d{4}$/;
+  const monthPattern = /^\d{4}-\d{2}$/;
+  const dayPattern = /^\d{4}-\d{2}-\d{2}$/;
+
+  let parsedDate: Date;
+
+  if (yearPattern.test(date)) {
+    parsedDate = new Date(`${date}-01-01T00:00:00Z`);
+  } else if (monthPattern.test(date)) {
+    parsedDate = new Date(`${date}-01T00:00:00Z`);
+  } else if (dayPattern.test(date)) {
+    parsedDate = new Date(`${date}T00:00:00Z`);
+  } else {
+    throw new Error("Invalid date format. Use YYYY, YYYY-MM, or YYYY-MM-DD.");
+  }
+
+  return parsedDate.getTime();
 }
