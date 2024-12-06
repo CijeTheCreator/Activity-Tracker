@@ -683,3 +683,16 @@ function getTimestamp(date: string): number {
 
   return parsedDate.getTime();
 }
+
+export function adjustLightness(hslColor: string) {
+  const regex = /^hsl\((\d+),\s*(\d+)%,\s*(\d+)%\)$/;
+  const match = hslColor.match(regex);
+  if (!match) {
+    throw new Error(
+      "Invalid HSL color format. Expected format: 'hsl(h, s%, l%)'",
+    );
+  }
+  const [_, h, s, l] = match.map(Number);
+  const newLightness = Math.min(l + 30, 100);
+  return `hsl(${h}, ${s}%, ${newLightness}%)`;
+}
