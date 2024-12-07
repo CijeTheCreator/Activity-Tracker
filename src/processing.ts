@@ -362,12 +362,25 @@ export function getCalendarHeatMapData7(
     processedPenpotData,
     generatedRange,
   );
-  return calendarHeatMapArray.map((value) => {
+  const calendarArray = calendarHeatMapArray.map((value) => {
     return {
       date: value.day,
       count: value.hours as number,
     };
   });
+  const filledCalendarArray = generatedRange.map((value) => {
+    const equivalentCalendarArrayValue = calendarArray.find(
+      (calendarArrayValue) => {
+        return calendarArrayValue.date == value;
+      },
+    );
+    if (equivalentCalendarArrayValue) return equivalentCalendarArrayValue;
+    return {
+      date: value,
+      count: 0,
+    };
+  });
+  return filledCalendarArray;
 }
 
 export function getPieChartAllProjects6(

@@ -1,10 +1,9 @@
 import {
-  ChartConfig,
   ChartContainer,
   ChartLegend,
   ChartLegendContent,
 } from "@/components/ui/chart";
-import { ChartData } from "@/lib/types";
+import { ChartData, ChartConfig } from "@/lib/types";
 import { Pie, PieChart } from "recharts";
 import { NoData } from "./no-data";
 

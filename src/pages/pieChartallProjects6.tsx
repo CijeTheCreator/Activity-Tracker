@@ -1,19 +1,20 @@
 import {
+  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { ActionData, ChartConfig } from "@/lib/types";
+import { ChartData } from "@/lib/types";
 import { Pie, PieChart, Sector } from "recharts";
 import { PieSectorDataItem } from "recharts/types/polar/Pie";
 import { NoData } from "./no-data";
 
-export function PieChartActionsPerformed4({
+export function PieChartAllProjects6({
   chartData,
   chartConfig,
 }: {
-  chartData: ActionData;
-  chartConfig: ChartConfig;
+  chartData: ChartData;
+  chartConfig: ChartConfig | null;
 }) {
   if (!chartData || !chartConfig) return <NoData />;
   return (
@@ -29,7 +30,7 @@ export function PieChartActionsPerformed4({
         <Pie
           data={chartData}
           dataKey="hours"
-          nameKey="actionPerformed"
+          nameKey="project"
           innerRadius={60}
           strokeWidth={5}
           activeIndex={0}

@@ -1,12 +1,11 @@
 import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { Bar, BarChart, XAxis, YAxis } from "recharts";
 import { NoData } from "./no-data";
-import { ChartData } from "@/lib/types";
+import { ChartConfig, ChartData } from "@/lib/types";
 
 export function HorizontalBarsProjectsWorkedOn2({
   chartData,
