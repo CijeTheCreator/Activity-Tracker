@@ -14,7 +14,7 @@ import {
 import { useState } from "react";
 import { Loader } from "@/components/Loader";
 
-export default function DashboardPage(
+export default function DashboardPage({
   totalTimeCardDayArray,
   totalTimeCardMonthArray,
   totalTimeCardYearArray,
@@ -57,7 +57,66 @@ export default function DashboardPage(
   pieChart5chartConfigDayArray,
   pieChart5chartConfigMonthArray,
   pieChart5chartConfigYearArray,
-) {
+
+  totalTimeCardOverall,
+  projectsWorkedOnCardOverall,
+  collaboratorsCardOverall,
+  totalActionsPerformedCardOverall,
+  pieChartAllProjects6ChartDataOverall,
+  pieChartAllProjects6ChartConfigOverall,
+  calendarValuesOverall,
+}: {
+  totalTimeCardDayArray: TCard;
+  totalTimeCardMonthArray: TCard;
+  totalTimeCardYearArray: TCard;
+  projectsWorkedOnCardDayArray: TCard;
+  projectsWorkedOnCardMonthArray: TCard;
+  projectsWorkedOnCardYearArray: TCard;
+  collaboratorsCardDayArray: TCard;
+  collaboratorsCardMonthArray: TCard;
+  collaboratorsCardYearArray: TCard;
+  totalActionsPerformedCardDayArray: TCard;
+  totalActionsPerformedCardMonthArray: TCard;
+  totalActionsPerformedCardYearArray: TCard;
+  areaChartDataDayArray: AreaChartData;
+  areaChartDataMonthArray: AreaChartData;
+  areaChartDataYearArray: AreaChartData;
+  areaChartConfigDayArray: ChartConfig;
+  areaChartConfigMonthArray: ChartConfig;
+  areaChartConfigYearArray: ChartConfig;
+  horizontalBarsChartDataDayArray: ChartData;
+  horizontalBarsChartDataMonthArray: ChartData;
+  horizontalBarsChartDataYearArray: ChartData;
+  horizontalBarsChartConfigDayArray: ChartConfig;
+  horizontalBarsChartConfigMonthArray: ChartConfig;
+  horizontalBarsChartConfigYearArray: ChartConfig;
+  pieChart3chartDataDayArray: ChartData;
+  pieChart3chartDataMonthArray: ChartData;
+  pieChart3chartDataYearArray: ChartData;
+  pieChart3chartConfigDayArray: ChartConfig;
+  pieChart3chartConfigMonthArray: ChartConfig;
+  pieChart3chartConfigYearArray: ChartConfig;
+  lineChart4chartDataDayArray: CollaboratorData;
+  lineChart4chartDataMonthArray: CollaboratorData;
+  lineChart4chartDataYearArray: CollaboratorData;
+  lineChart4chartConfigDayArray: ChartConfig;
+  lineChart4chartConfigMonthArray: ChartConfig;
+  lineChart4chartConfigYearArray: ChartConfig;
+  pieChart5chartDataDayArray: ActionData;
+  pieChart5chartDataMonthArray: ActionData;
+  pieChart5chartDataYearArray: ActionData;
+  pieChart5chartConfigDayArray: ChartConfig;
+  pieChart5chartConfigMonthArray: ChartConfig;
+  pieChart5chartConfigYearArray: ChartConfig;
+
+  totalTimeCardOverall;
+  projectsWorkedOnCardOverall;
+  collaboratorsCardOverall;
+  totalActionsPerformedCardOverall;
+  pieChartAllProjects6ChartDataOverall;
+  pieChartAllProjects6ChartConfigOverall;
+  calendarValuesOverall;
+}) {
   const tabs: ("day" | "month" | "year")[] = ["day", "month", "year"];
   const [totalTimeCard, setTotalTimeCard] = useState<TCard | null>(null);
   const [projectsWorkedOnCard, setProjectsWorkedOnCard] =
