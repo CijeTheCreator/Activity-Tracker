@@ -1,8 +1,20 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { Shape } from "@penpot/plugin-types";
-import { hasDaProperty, PenpotDataRaw } from "./lib/types";
-import type { PluginMessageEvent } from "./model";
+import { Board, Shape } from "@penpot/plugin-types";
+import { PluginMessageEvent } from "./model";
 
+type PenpotDataRaw = {
+  start: number;
+  project: string;
+  page: string;
+  change: string;
+  collaborators: string[];
+};
+function hasDaProperty(
+  event: Shape | Board,
+): event is
+  | (Shape & { Da: { Lf: string } })
+  | (Board & { Da: { Lf: string } }) {
+  return event && typeof event === "object" && "Da" in event;
+}
 penpot.ui.open("Activity Tracker", `?theme=${penpot.theme},`, {
   width: 320,
   height: 630,
@@ -12,11 +24,17 @@ penpot.on("themechange", (theme) => {
   sendMessage({ type: "theme", content: theme });
 });
 
-penpot.ui.sendMessage({
-  type: "user_id_response",
-  userId: penpot.currentUser.id,
-});
+console.log(`Above: penpot.ui.sendMessage({`);
 
+penpot.ui.onMessage<{ message: string }>(async (message) => {
+  if (message.message == "id_request") {
+    penpot.ui.sendMessage({
+      type: "user_id_response",
+      userId: penpot.currentUser.id,
+    });
+  }
+});
+console.log(`Below: penpot.ui.sendMessage({`);
 let listenerIds: symbol[] = [];
 
 let previousStates: Shape[] = [];

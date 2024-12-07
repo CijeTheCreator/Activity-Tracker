@@ -11,16 +11,18 @@ import {
   getTotalActions8,
   getTotalCollaborators9,
   getTotalTime11,
+  processPenpotData,
   segmentPenpotData,
 } from "@/processing";
 import DashboardPage from "./dashboard";
-import { PenpotDataProcessed } from "@/lib/types";
+import { PenpotDataRaw } from "@/lib/types";
 
 export function CalculationCente({
-  penpotDataProceessed,
+  penpotDataRaw,
 }: {
-  penpotDataProceessed: PenpotDataProcessed[];
+  penpotDataRaw: PenpotDataRaw[];
 }) {
+  const penpotDataProceessed = processPenpotData(penpotDataRaw);
   const generatedDayRange = generateRange("day", 1730986775000);
   const generatedMonthRange = generateRange("month", 1730986775000);
   const generatedYearRange = generateRange("year", 1730986775000);

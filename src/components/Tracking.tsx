@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 
 export function Tracking() {
@@ -8,7 +9,9 @@ export function Tracking() {
       </div>
       <div>
         {/* TODO: Setup routing here */}
-        <Button>View Stats</Button>
+        <Link to={"/dashboard"} target="_blank" rel="noopener noreferrer">
+          <Button>View Stats</Button>
+        </Link>
       </div>
     </div>
   );

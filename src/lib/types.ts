@@ -87,13 +87,6 @@ export type PenpotDataProcessed = {
 export type ExtendedShape = Shape & { Da: { Lf: string } };
 export type ExtendedBoard = Board & { Da: { Lf: string } };
 //Lf is the changed shapes Id
-export function hasDaProperty(
-  event: Shape | Board,
-): event is
-  | (Shape & { Da: { Lf: string } })
-  | (Board & { Da: { Lf: string } }) {
-  return event && typeof event === "object" && "Da" in event;
-}
 
 export const UserKeyForm = z.object({
   key: z.string().min(4, {

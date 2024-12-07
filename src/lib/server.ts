@@ -1,7 +1,27 @@
+import { decryptString } from "@/processing";
 import axios from "axios";
 
+const ADDRESS = "http://localhost:3000";
+type result = {
+  id: string;
+  encryptedContent: string;
+  userId: string;
+}[];
+export async function fetchUserActivity(userId: string, key: string) {
+  const response = await axios.post(`${ADDRESS}/fetch_data`, {
+    userId,
+  });
+  const encryptedLog = response.data as result;
+  const penpotDataRaw = encryptedLog.map((value) => {
+    const decryptedContent = JSON.parse(
+      decryptString(key, value.encryptedContent),
+    );
+    return decryptedContent;
+  });
+  return penpotDataRaw;
+}
 export async function validateUserKey(key: string, userId: string) {
-  const response = await axios.post("/validate_user_key", {
+  const response = await axios.post(`${ADDRESS}/validate_user_key`, {
     userId,
     key,
   });
@@ -10,14 +30,14 @@ export async function validateUserKey(key: string, userId: string) {
 }
 
 export async function check_user(userId: string) {
-  const response = await axios.post("/check_user", {
+  const response = await axios.post(`${ADDRESS}/check_user`, {
     userId,
   });
   console.log("Response for check_user:", response.data);
   return response.data.isPresent;
 }
 export async function appendToDb(userId: string, encryptedContent: string) {
-  const response = await axios.post("/append_to_db", {
+  const response = await axios.post(`${ADDRESS}/append_to_db`, {
     userId,
     encryptedContent,
   });
