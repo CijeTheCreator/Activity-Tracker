@@ -2,6 +2,10 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { TCard } from "@/lib/types";
 import { TabsContent } from "@radix-ui/react-tabs";
 import { AreaChartTimeSpent1 } from "./areaChart1";
+import { HorizontalBarsProjectsWorkedOn2 } from "./horizontalBars2";
+import { LineChartCollaborators3 } from "./lineChart4";
+import { PieChartProjectsWorkedOn3 } from "./pieChart3";
+import { PieChartActionsPerformed4 } from "./pieChart5";
 
 export function TabRangeContent({
   totalTimeCard,

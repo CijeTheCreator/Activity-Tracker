@@ -8,6 +8,7 @@ import {
 import { AreaChartData, ChartConfig } from "@/lib/types";
 import { adjustLightness } from "@/processing";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+import { NoData } from "./no-data";
 
 export function AreaChartTimeSpent1({
   chartData,
@@ -27,7 +28,7 @@ export function AreaChartTimeSpent1({
         .flat(1),
     ),
   ].filter((value) => value != range);
-  if (!chartConfig) return <></>;
+  if (!chartData || !chartConfig) return <NoData />;
   return (
     <ChartContainer
       config={chartConfig}
