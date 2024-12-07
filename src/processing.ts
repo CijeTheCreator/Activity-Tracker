@@ -292,14 +292,14 @@ export function getLineChartCollaboratorsData4(
   processedPenpotData: PenpotDataProcessed[][],
   range: "day" | "month" | "year",
   generatedRange: string[],
-): { chartData: CollaboratorData; chartConfig: ChartConfig } {
+): { data: CollaboratorData; config: ChartConfig } {
   const chartData = getCollaboratorData(
     processedPenpotData,
     range,
     generatedRange,
   );
   const chartConfig = generateChartconfigSingleData(range);
-  return { chartData, chartConfig };
+  return { data: chartData, config: chartConfig };
 }
 
 export function getTotalCollaborators9(
@@ -626,7 +626,7 @@ export function encryptString(text: string, key: string) {
 
 export function generateRange(
   range: "day" | "month" | "year",
-  date: string,
+  date: number,
 ): string[] {
   const result: string[] = [];
   const inputDate = new Date(date);

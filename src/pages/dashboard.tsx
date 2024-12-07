@@ -11,7 +11,7 @@ import {
   AreaChartData,
   CollaboratorData,
 } from "@/lib/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Loader } from "@/components/Loader";
 
 export default function DashboardPage({
@@ -27,12 +27,12 @@ export default function DashboardPage({
   totalActionsPerformedCardDayArray,
   totalActionsPerformedCardMonthArray,
   totalActionsPerformedCardYearArray,
-  areaChartDataDayArray,
-  areaChartDataMonthArray,
-  areaChartDataYearArray,
-  areaChartConfigDayArray,
-  areaChartConfigMonthArray,
-  areaChartConfigYearArray,
+  areaChartDataDay: areaChartDataDayArray,
+  areaChartDataMonth: areaChartDataMonthArray,
+  areaChartDataYear: areaChartDataYearArray,
+  areaChartConfigDay: areaChartConfigDayArray,
+  areaChartConfigMonth: areaChartConfigMonthArray,
+  areaChartConfigYear: areaChartConfigYearArray,
   horizontalBarsChartDataDayArray,
   horizontalBarsChartDataMonthArray,
   horizontalBarsChartDataYearArray,
@@ -45,12 +45,12 @@ export default function DashboardPage({
   pieChart3chartConfigDayArray,
   pieChart3chartConfigMonthArray,
   pieChart3chartConfigYearArray,
-  lineChart4chartDataDayArray,
-  lineChart4chartDataMonthArray,
-  lineChart4chartDataYearArray,
-  lineChart4chartConfigDayArray,
-  lineChart4chartConfigMonthArray,
-  lineChart4chartConfigYearArray,
+  lineChart4chartDataDay: lineChart4chartDataDayArray,
+  lineChart4chartDataMonth: lineChart4chartDataMonthArray,
+  lineChart4chartDataYear: lineChart4chartDataYearArray,
+  lineChart4chartConfigDay: lineChart4chartConfigDayArray,
+  lineChart4chartConfigMonth: lineChart4chartConfigMonthArray,
+  lineChart4chartConfigYear: lineChart4chartConfigYearArray,
   pieChart5chartDataDayArray,
   pieChart5chartDataMonthArray,
   pieChart5chartDataYearArray,
@@ -66,71 +66,58 @@ export default function DashboardPage({
   pieChartAllProjects6ChartConfigOverall,
   calendarValuesOverall,
 }: {
-  totalTimeCardDayArray: TCard;
-  totalTimeCardMonthArray: TCard;
-  totalTimeCardYearArray: TCard;
-  projectsWorkedOnCardDayArray: TCard;
-  projectsWorkedOnCardMonthArray: TCard;
-  projectsWorkedOnCardYearArray: TCard;
-  collaboratorsCardDayArray: TCard;
-  collaboratorsCardMonthArray: TCard;
-  collaboratorsCardYearArray: TCard;
-  totalActionsPerformedCardDayArray: TCard;
-  totalActionsPerformedCardMonthArray: TCard;
-  totalActionsPerformedCardYearArray: TCard;
-  areaChartDataDayArray: AreaChartData;
-  areaChartDataMonthArray: AreaChartData;
-  areaChartDataYearArray: AreaChartData;
-  areaChartConfigDayArray: ChartConfig;
-  areaChartConfigMonthArray: ChartConfig;
-  areaChartConfigYearArray: ChartConfig;
-  horizontalBarsChartDataDayArray: ChartData;
-  horizontalBarsChartDataMonthArray: ChartData;
-  horizontalBarsChartDataYearArray: ChartData;
-  horizontalBarsChartConfigDayArray: ChartConfig;
-  horizontalBarsChartConfigMonthArray: ChartConfig;
-  horizontalBarsChartConfigYearArray: ChartConfig;
-  pieChart3chartDataDayArray: ChartData;
-  pieChart3chartDataMonthArray: ChartData;
-  pieChart3chartDataYearArray: ChartData;
-  pieChart3chartConfigDayArray: ChartConfig;
-  pieChart3chartConfigMonthArray: ChartConfig;
-  pieChart3chartConfigYearArray: ChartConfig;
-  lineChart4chartDataDayArray: CollaboratorData;
-  lineChart4chartDataMonthArray: CollaboratorData;
-  lineChart4chartDataYearArray: CollaboratorData;
-  lineChart4chartConfigDayArray: ChartConfig;
-  lineChart4chartConfigMonthArray: ChartConfig;
-  lineChart4chartConfigYearArray: ChartConfig;
-  pieChart5chartDataDayArray: ActionData;
-  pieChart5chartDataMonthArray: ActionData;
-  pieChart5chartDataYearArray: ActionData;
-  pieChart5chartConfigDayArray: ChartConfig;
-  pieChart5chartConfigMonthArray: ChartConfig;
-  pieChart5chartConfigYearArray: ChartConfig;
+  totalTimeCardDayArray: TCard[];
+  totalTimeCardMonthArray: TCard[];
+  totalTimeCardYearArray: TCard[];
+  projectsWorkedOnCardDayArray: TCard[];
+  projectsWorkedOnCardMonthArray: TCard[];
+  projectsWorkedOnCardYearArray: TCard[];
+  collaboratorsCardDayArray: TCard[];
+  collaboratorsCardMonthArray: TCard[];
+  collaboratorsCardYearArray: TCard[];
+  totalActionsPerformedCardDayArray: TCard[];
+  totalActionsPerformedCardMonthArray: TCard[];
+  totalActionsPerformedCardYearArray: TCard[];
+  areaChartDataDay: AreaChartData;
+  areaChartDataMonth: AreaChartData;
+  areaChartDataYear: AreaChartData;
+  areaChartConfigDay: ChartConfig;
+  areaChartConfigMonth: ChartConfig;
+  areaChartConfigYear: ChartConfig;
+  horizontalBarsChartDataDayArray: ChartData[];
+  horizontalBarsChartDataMonthArray: ChartData[];
+  horizontalBarsChartDataYearArray: ChartData[];
+  horizontalBarsChartConfigDayArray: ChartConfig[];
+  horizontalBarsChartConfigMonthArray: ChartConfig[];
+  horizontalBarsChartConfigYearArray: ChartConfig[];
+  pieChart3chartDataDayArray: ChartData[];
+  pieChart3chartDataMonthArray: ChartData[];
+  pieChart3chartDataYearArray: ChartData[];
+  pieChart3chartConfigDayArray: ChartConfig[];
+  pieChart3chartConfigMonthArray: ChartConfig[];
+  pieChart3chartConfigYearArray: ChartConfig[];
+  lineChart4chartDataDay: CollaboratorData;
+  lineChart4chartDataMonth: CollaboratorData;
+  lineChart4chartDataYear: CollaboratorData;
+  lineChart4chartConfigDay: ChartConfig;
+  lineChart4chartConfigMonth: ChartConfig;
+  lineChart4chartConfigYear: ChartConfig;
+  pieChart5chartDataDayArray: ActionData[];
+  pieChart5chartDataMonthArray: ActionData[];
+  pieChart5chartDataYearArray: ActionData[];
+  pieChart5chartConfigDayArray: ChartConfig[];
+  pieChart5chartConfigMonthArray: ChartConfig[];
+  pieChart5chartConfigYearArray: ChartConfig[];
 
-  totalTimeCardOverall;
-  projectsWorkedOnCardOverall;
-  collaboratorsCardOverall;
-  totalActionsPerformedCardOverall;
-  pieChartAllProjects6ChartDataOverall;
-  pieChartAllProjects6ChartConfigOverall;
-  calendarValuesOverall;
+  totalTimeCardOverall: TCard;
+  projectsWorkedOnCardOverall: TCard;
+  collaboratorsCardOverall: TCard;
+  totalActionsPerformedCardOverall: TCard;
+  pieChartAllProjects6ChartDataOverall: ChartData;
+  pieChartAllProjects6ChartConfigOverall: ChartConfig;
+  calendarValuesOverall: TValues;
 }) {
   const tabs: ("day" | "month" | "year")[] = ["day", "month", "year"];
-  const [totalTimeCard, setTotalTimeCard] = useState<TCard | null>(null);
-  const [projectsWorkedOnCard, setProjectsWorkedOnCard] =
-    useState<TCard | null>(null);
-  const [collaboratorsCard, setCollaboratorsCard] = useState<TCard | null>(
-    null,
-  );
-  const [totalActionsPerformedCard, setTotalActionsPerformedCard] =
-    useState<TCard | null>(null);
-  const [pieChartAllProjects6ChartData, setPieChartAllProjects6ChartData] =
-    useState<ChartData | null>(null);
-  const [pieChartAllProjects6ChartConfig, setPieChartAllProjects6ChartConfig] =
-    useState<ChartConfig | null>(null);
-  const [calendarValues, setCalendarValues] = useState<TValues | null>(null);
   const [totalTimeCardDMY, setTotalTimeCardDMY] = useState<TCard | null>(null);
   const [projectsWorkedOnCardDMY, setProjectsWorkedOnCardDMY] =
     useState<TCard | null>(null);
@@ -159,15 +146,89 @@ export default function DashboardPage({
   const [pieChart5chartConfigDMY, setPieChart5chartConfigDMY] =
     useState<ChartConfig | null>(null);
   const [range, setRange] = useState<string>("day");
-  const [configIndex, setConfigIndex] = useState<string>("day");
+  const [configIndex, setConfigIndex] = useState<number>(0);
+
+  useEffect(() => {
+    setConfigIndex(0);
+    switch (range) {
+      case "day":
+        setPieChart5chartConfigDMY(pieChart5chartConfigDayArray[configIndex]);
+        setPieChart5chartDataDMY(pieChart5chartDataDayArray[configIndex]);
+        setLineChart4chartConfigDMY(lineChart4chartConfigDayArray);
+        setLineChart4chartDataDMY(lineChart4chartDataDayArray);
+        setPieChart3chartConfigDMY(pieChart3chartConfigDayArray[configIndex]);
+        setPieChart3chartDataDMY(pieChart3chartDataDayArray[configIndex]);
+        setHorizontalBarsChartConfigDMY(
+          horizontalBarsChartConfigDayArray[configIndex],
+        );
+        setHorizontalBarsChartDataDMY(
+          horizontalBarsChartDataDayArray[configIndex],
+        );
+        setAreaChartConfigDMY(areaChartConfigDayArray);
+        setAreaChartDataDMY(areaChartDataDayArray);
+        setTotalActionsPerformedCardDMY(
+          totalActionsPerformedCardDayArray[configIndex],
+        );
+        setCollaboratorsCardDMY(collaboratorsCardDayArray[configIndex]);
+        setProjectsWorkedOnCardDMY(projectsWorkedOnCardDayArray[configIndex]);
+        setTotalTimeCardDMY(totalTimeCardDayArray[configIndex]);
+        break;
+      case "month":
+        setPieChart5chartConfigDMY(pieChart5chartConfigMonthArray[configIndex]);
+        setPieChart5chartDataDMY(pieChart5chartDataMonthArray[configIndex]);
+        setLineChart4chartConfigDMY(lineChart4chartConfigMonthArray);
+        setLineChart4chartDataDMY(lineChart4chartDataMonthArray);
+        setPieChart3chartConfigDMY(pieChart3chartConfigMonthArray[configIndex]);
+        setPieChart3chartDataDMY(pieChart3chartDataMonthArray[configIndex]);
+        setHorizontalBarsChartConfigDMY(
+          horizontalBarsChartConfigMonthArray[configIndex],
+        );
+        setHorizontalBarsChartDataDMY(
+          horizontalBarsChartDataMonthArray[configIndex],
+        );
+        setAreaChartConfigDMY(areaChartConfigMonthArray);
+        setAreaChartDataDMY(areaChartDataMonthArray);
+        setTotalActionsPerformedCardDMY(
+          totalActionsPerformedCardMonthArray[configIndex],
+        );
+        setCollaboratorsCardDMY(collaboratorsCardMonthArray[configIndex]);
+        setProjectsWorkedOnCardDMY(projectsWorkedOnCardMonthArray[configIndex]);
+        setTotalTimeCardDMY(totalTimeCardMonthArray[configIndex]);
+        break;
+      case "year":
+        setPieChart5chartConfigDMY(pieChart5chartConfigYearArray[configIndex]);
+        setPieChart5chartDataDMY(pieChart5chartDataYearArray[configIndex]);
+        setLineChart4chartConfigDMY(lineChart4chartConfigYearArray);
+        setLineChart4chartDataDMY(lineChart4chartDataYearArray);
+        setPieChart3chartConfigDMY(pieChart3chartConfigYearArray[configIndex]);
+        setPieChart3chartDataDMY(pieChart3chartDataYearArray[configIndex]);
+        setHorizontalBarsChartConfigDMY(
+          horizontalBarsChartConfigYearArray[configIndex],
+        );
+        setHorizontalBarsChartDataDMY(
+          horizontalBarsChartDataYearArray[configIndex],
+        );
+        setAreaChartConfigDMY(areaChartConfigYearArray);
+        setAreaChartDataDMY(areaChartDataYearArray);
+        setTotalActionsPerformedCardDMY(
+          totalActionsPerformedCardYearArray[configIndex],
+        );
+        setCollaboratorsCardDMY(collaboratorsCardYearArray[configIndex]);
+        setProjectsWorkedOnCardDMY(projectsWorkedOnCardYearArray[configIndex]);
+        setTotalTimeCardDMY(totalTimeCardYearArray[configIndex]);
+        break;
+      default:
+        throw new Error(`Unsupported range`);
+    }
+  }, [range, configIndex]);
   const allArePresent =
-    !totalTimeCard ||
-    !projectsWorkedOnCard ||
-    !collaboratorsCard ||
-    !totalActionsPerformedCard ||
-    !pieChartAllProjects6ChartData ||
-    !pieChartAllProjects6ChartConfig ||
-    !calendarValues ||
+    !totalTimeCardOverall ||
+    !projectsWorkedOnCardOverall ||
+    !collaboratorsCardOverall ||
+    !totalActionsPerformedCardOverall ||
+    !pieChartAllProjects6ChartDataOverall ||
+    !pieChartAllProjects6ChartConfigOverall ||
+    !calendarValuesOverall ||
     !totalTimeCardDMY ||
     !projectsWorkedOnCardDMY ||
     !collaboratorsCardDMY ||
@@ -211,13 +272,17 @@ export default function DashboardPage({
               </TabsTrigger>
             </TabsList>
             <TabContentOverall
-              totalTimeCard={totalTimeCard}
-              projectsWorkedOnCard={projectsWorkedOnCard}
-              collaboratorsCard={collaboratorsCard}
-              totalActionsPerformedCard={totalActionsPerformedCard}
-              pieChartAllProjects6ChartData={pieChartAllProjects6ChartData}
-              pieChartAllProjects6ChartConfig={pieChartAllProjects6ChartConfig}
-              calendarValues={calendarValues}
+              totalTimeCard={totalTimeCardOverall}
+              projectsWorkedOnCard={projectsWorkedOnCardOverall}
+              collaboratorsCard={collaboratorsCardOverall}
+              totalActionsPerformedCard={totalActionsPerformedCardOverall}
+              pieChartAllProjects6ChartData={
+                pieChartAllProjects6ChartDataOverall
+              }
+              pieChartAllProjects6ChartConfig={
+                pieChartAllProjects6ChartConfigOverall
+              }
+              calendarValues={calendarValuesOverall}
             />
             {tabs.map((value) => {
               return (
