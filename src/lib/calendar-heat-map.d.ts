@@ -1,5 +1,9 @@
 declare module "react-calendar-heatmap" {
   import * as React from "react";
+  export interface TValue {
+    date: string;
+    count: number;
+  }
 
   export interface HeatmapValue {
     date: string | Date;
@@ -14,7 +18,7 @@ declare module "react-calendar-heatmap" {
     horizontal?: boolean;
     showWeekdayLabels?: boolean;
     onClick?: (value: HeatmapValue) => void;
-    classForValue?: (value: HeatmapValue) => string;
+    classForValue?: (value: TValue) => string;
     titleForValue?: (value: HeatmapValue) => string;
     tooltipDataAttrs?: (
       value: HeatmapValue,
