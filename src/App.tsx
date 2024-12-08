@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import "./App.css";
-import { Toaster, toast } from "sonner";
+import { Toaster } from "sonner";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Plugin from "./Plugin";
-import { DashboardLandingKeyEntryPage } from "./pages/DashboardLanding";
 import { DashbaordLanding } from "./pages/fetchingArea";
 
 function App() {

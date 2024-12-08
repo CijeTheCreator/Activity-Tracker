@@ -5,7 +5,6 @@ import { PenpotDataRaw, TUserKeyForm } from "@/lib/types";
 import { fetchUserActivity } from "@/lib/server";
 import { DashboardLandingKeyEntryPage } from "./DashboardLanding";
 import { toast } from "sonner";
-import { LOGGERA as LOGGERA, LOGGERB } from "@/tests/debug";
 
 export function DashbaordLanding() {
   const [penpotDataRaw, setPenpotDataRaw] = useState<PenpotDataRaw[] | null>(
