@@ -11,8 +11,8 @@ export function PieChartProjectsWorkedOn3({
   chartData,
   chartConfig,
 }: {
-  chartData: ChartData;
-  chartConfig: ChartConfig;
+  chartData: ChartData | null;
+  chartConfig: ChartConfig | null;
 }) {
   if (!chartData || !chartConfig) return <NoData />;
   return (

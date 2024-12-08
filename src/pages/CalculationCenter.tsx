@@ -27,9 +27,25 @@ export function CalculationCente({
   const generatedMonthRange = generateRange("month", 1730986775000);
   const generatedYearRange = generateRange("year", 1730986775000);
 
-  const yearSegment = segmentPenpotData(penpotDataProceessed, "year");
-  const monthSegment = segmentPenpotData(penpotDataProceessed, "month");
-  const daySegment = segmentPenpotData(penpotDataProceessed, "day");
+  const yearSegment = segmentPenpotData(
+    penpotDataProceessed,
+    "year",
+    generatedYearRange,
+  );
+  const monthSegment = segmentPenpotData(
+    penpotDataProceessed,
+    "month",
+    generatedMonthRange,
+  );
+  const daySegment = segmentPenpotData(
+    penpotDataProceessed,
+    "day",
+    generatedDayRange,
+  );
+
+  console.log("daySegment :", daySegment);
+  console.log("monthSegment :", monthSegment);
+  console.log("yearSegment :", yearSegment);
 
   const totalTimeCardDayArray = daySegment.map((penpotDataProcessed) =>
     getTotalTime11(penpotDataProcessed),
@@ -76,127 +92,158 @@ export function CalculationCente({
     getAreaChartTimeSpentData1(monthSegment, "month", generatedMonthRange);
   const { data: areaChartDataYear, config: areaChartConfigYear } =
     getAreaChartTimeSpentData1(yearSegment, "year", generatedYearRange);
+  console.log(`getAreaChartTimeSpentData1`);
   const { data: areaChartDataDay, config: areaChartConfigDay } =
     getAreaChartTimeSpentData1(daySegment, "day", generatedDayRange);
+  console.log(`horizontalBarsChartDataDayArray`);
   const horizontalBarsChartDataDayArray =
     getHorizontalBarChartProjectsWorkedOnData2(
       daySegment,
       "day",
       generatedDayRange,
     ).map((value) => value.chartData);
+  console.log(`horizontalBarsChartDataMonthArray`);
   const horizontalBarsChartDataMonthArray =
     getHorizontalBarChartProjectsWorkedOnData2(
       monthSegment,
       "month",
       generatedMonthRange,
     ).map((value) => value.chartData);
+  console.log(`horizontalBarsChartDataYearArray`);
   const horizontalBarsChartDataYearArray =
     getHorizontalBarChartProjectsWorkedOnData2(
       yearSegment,
       "year",
       generatedYearRange,
     ).map((value) => value.chartData);
+  console.log(`horizontalBarsChartConfigDayArray`);
   const horizontalBarsChartConfigDayArray =
     getHorizontalBarChartProjectsWorkedOnData2(
       daySegment,
       "day",
       generatedDayRange,
     ).map((value) => value.chartConfig);
+  console.log(`horizontalBarsChartConfigMonthArray`);
   const horizontalBarsChartConfigMonthArray =
     getHorizontalBarChartProjectsWorkedOnData2(
       monthSegment,
       "month",
       generatedDayRange,
     ).map((value) => value.chartConfig);
+  console.log(`horizontalBarsChartConfigYearArray`);
   const horizontalBarsChartConfigYearArray =
     getHorizontalBarChartProjectsWorkedOnData2(
       yearSegment,
       "year",
       generatedYearRange,
     ).map((value) => value.chartConfig);
+  console.log(`pieChart3chartDataDayArray`);
   const pieChart3chartDataDayArray = getPieChartProjectsWorkedOnData3(
     daySegment,
     "day",
     generatedDayRange,
   ).map((value) => value.chartData);
+  console.log(`pieChart3chartDataMonthArray`);
   const pieChart3chartDataMonthArray = getPieChartProjectsWorkedOnData3(
     monthSegment,
     "month",
     generatedMonthRange,
   ).map((value) => value.chartData);
+  console.log(`pieChart3chartDataYearArray`);
   const pieChart3chartDataYearArray = getPieChartProjectsWorkedOnData3(
     yearSegment,
     "year",
     generatedYearRange,
   ).map((value) => value.chartData);
+  console.log(`pieChart3chartConfigDayArray`);
   const pieChart3chartConfigDayArray = getPieChartProjectsWorkedOnData3(
     daySegment,
     "day",
     generatedDayRange,
   ).map((value) => value.chartConfig);
+  console.log(`pieChart3chartConfigMonthArray`);
   const pieChart3chartConfigMonthArray = getPieChartProjectsWorkedOnData3(
     monthSegment,
     "month",
     generatedDayRange,
   ).map((value) => value.chartConfig);
+  console.log(`pieChart3chartConfigYearArray`);
   const pieChart3chartConfigYearArray = getPieChartProjectsWorkedOnData3(
     yearSegment,
     "year",
     generatedYearRange,
   ).map((value) => value.chartConfig);
 
+  console.log(`{`);
   const { data: lineChart4chartDataMonth, config: lineChart4chartConfigMonth } =
     getLineChartCollaboratorsData4(monthSegment, "month", generatedMonthRange);
+  console.log(`{`);
   const { data: lineChart4chartDataYear, config: lineChart4chartConfigYear } =
     getLineChartCollaboratorsData4(yearSegment, "year", generatedYearRange);
+  console.log(`{`);
   const { data: lineChart4chartDataDay, config: lineChart4chartConfigDay } =
     getLineChartCollaboratorsData4(daySegment, "day", generatedDayRange);
 
+  console.log(`pieChart5chartDataDayArray`);
   const pieChart5chartDataDayArray = getPieChartActionsPerformedData5(
     daySegment,
     "day",
     generatedDayRange,
   ).map((value) => value.chartData);
+  console.log(`pieChart5chartDataMonthArray`);
   const pieChart5chartDataMonthArray = getPieChartActionsPerformedData5(
     monthSegment,
     "month",
     generatedMonthRange,
   ).map((value) => value.chartData);
+  console.log(`pieChart5chartDataYearArray`);
   const pieChart5chartDataYearArray = getPieChartActionsPerformedData5(
     yearSegment,
     "year",
     generatedYearRange,
   ).map((value) => value.chartData);
+  console.log(`pieChart5chartConfigDayArray`);
   const pieChart5chartConfigDayArray = getPieChartActionsPerformedData5(
     daySegment,
     "day",
     generatedDayRange,
   ).map((value) => value.chartConfig);
+  console.log(`pieChart5chartConfigMonthArray`);
   const pieChart5chartConfigMonthArray = getPieChartActionsPerformedData5(
     monthSegment,
     "month",
     generatedDayRange,
   ).map((value) => value.chartConfig);
+  console.log(`pieChart5chartConfigYearArray`);
   const pieChart5chartConfigYearArray = getPieChartActionsPerformedData5(
     yearSegment,
     "year",
     generatedYearRange,
   ).map((value) => value.chartConfig);
 
+  console.log(`totalTimeCardOverall`);
   const totalTimeCardOverall = getTotalTime11(penpotDataProceessed);
+  console.log(`projectsWorkedOnCardOverall`);
   const projectsWorkedOnCardOverall =
     getProjectsWorkedOn10(penpotDataProceessed);
+  console.log(`collaboratorsCardOverall`);
   const collaboratorsCardOverall = getTotalCollaborators9(penpotDataProceessed);
+  console.log(`totalActionsPerformedCardOverall`);
   const totalActionsPerformedCardOverall =
     getTotalActions8(penpotDataProceessed);
+  console.log(`pieChartAllProjects6ChartDataOverall`);
   const pieChartAllProjects6ChartDataOverall =
     getPieChartAllProjects6(penpotDataProceessed).chartData;
+  console.log(`pieChartAllProjects6ChartConfigOverall`);
   const pieChartAllProjects6ChartConfigOverall =
     getPieChartAllProjects6(penpotDataProceessed).chartConfig;
+  console.log(`calendarValuesOverall`);
   const calendarValuesOverall = getCalendarHeatMapData7(
     daySegment,
     generatedDayRange,
   );
+  console.log("Total time day array: ", totalTimeCardDayArray);
+
   return (
     <DashboardPage
       totalTimeCardDayArray={totalTimeCardDayArray}

@@ -13,10 +13,8 @@ export function FormContainer({
       <div className="w-full">
         <p className="text-center">
           {isPresent
-            ? `Dui, lectus urna nisl dignissim diam rhoncus quam sed gravida. Duis
-          metus, dolor etiam pellentesque tellus, gravida aliquet pulvinar
-          vulputate.`
-            : `In et sed nullam tellus tortor, sit tincidunt tristique posuere. Ultrices ut aenean quis vel nulla nunc vel, tempus sed.`}
+            ? `Enter your decryption key to create and access logs.`
+            : `Generate a secure key for tracking and protecting your activities.`}
         </p>
       </div>
       <div className="w-full">

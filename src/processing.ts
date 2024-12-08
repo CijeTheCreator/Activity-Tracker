@@ -88,6 +88,7 @@ function getCollaboratorData(
       day: "",
       fill: PRIMARY_COLOR,
     };
+    if (penpotDataSegment.length == 0) continue;
     collaboratorDataEntry[range] = penpotDataSegment[0].datetime!;
     const totalCollaborators = aggregateCollaborators(penpotDataSegment);
     collaboratorDataEntry["collaborators"] = totalCollaborators;
@@ -113,6 +114,13 @@ function getActionsPerformedData(
 }[] {
   const mapData = processedPenpotData.map((value) => {
     const actionsPerformed = aggregateActionsPerformedData(value);
+    if (value.length == 0)
+      return {
+        chartData: null,
+        chartConfig: null,
+        date: null,
+        start: null,
+      };
     const start = value[0].start;
     const date = getFormattedDate(range, value);
     const fillMap = mapItemToColor(
@@ -131,7 +139,15 @@ function getActionsPerformedData(
     });
     return { chartData, chartConfig, date, start };
   });
-  const filledAndSortedData = fillAndSortActionData(generatedRange, mapData);
+  const filledAndSortedData = fillAndSortActionData(
+    generatedRange,
+    mapData,
+  ) as {
+    chartData: ActionData;
+    chartConfig: ChartConfig;
+    date: string;
+    start: number;
+  }[];
   return filledAndSortedData;
 }
 
@@ -140,13 +156,20 @@ function getProjectsWorkedOnData(
   range: "day" | "month" | "year",
   generatedRange: string[],
 ): {
-  chartData: ChartData;
-  chartConfig: ChartConfig;
+  chartData: ChartData | null;
+  chartConfig: ChartConfig | null;
   date: string;
   start: number;
 }[] {
   const mapData = processedPenpotData.map((value) => {
     const totalTimeSpentOnProject = aggregrateTotalTimeSpent(value);
+    if (value.length == 0)
+      return {
+        chartData: null,
+        chartConfig: null,
+        date: null,
+        start: null,
+      };
     const start = value[0].start;
     const date = getFormattedDate(range, value);
     const fillMap = mapItemToColor(
@@ -165,7 +188,12 @@ function getProjectsWorkedOnData(
     });
     return { chartData, chartConfig, date, start };
   });
-  const filledAndSortedData = fillAndSortData(generatedRange, mapData);
+  const filledAndSortedData = fillAndSortData(generatedRange, mapData) as {
+    chartData: ChartData | null;
+    chartConfig: ChartConfig | null;
+    date: string;
+    start: number;
+  }[];
 
   return filledAndSortedData;
 }
@@ -173,51 +201,67 @@ function getProjectsWorkedOnData(
 function fillAndSortActionData(
   generatedRange: string[],
   mapData: {
-    chartData: { actionPerformed: string; hours: number; fill: string }[];
-    chartConfig: {
-      [key: string]: { label: string; color?: string };
-      hours: { label: string; color?: string };
-    };
-    date: string;
-    start: number;
+    chartData: ActionData | null;
+    chartConfig: ChartConfig | null;
+    date: string | null;
+    start: number | null;
   }[],
 ) {
   return generatedRange.map((value) => {
     const equivalentMappedData = mapData.find((penpotdata) => {
       return penpotdata.date == value;
     });
-    if (equivalentMappedData) return equivalentMappedData;
-    return {
-      chartData: null,
-      chartConfig: null,
-      date: value,
-      start: getTimestamp(value),
-    };
+
+    if (!equivalentMappedData) {
+      return {
+        chartData: null,
+        chartConfig: null,
+        date: value,
+        start: getTimestamp(value),
+      };
+    } else if (!equivalentMappedData.date || !equivalentMappedData.start) {
+      return {
+        chartData: null,
+        chartConfig: null,
+        date: value,
+        start: getTimestamp(value),
+      };
+    } else {
+      return equivalentMappedData;
+    }
   });
 }
 function fillAndSortData(
   generatedRange: string[],
   mapData: {
-    chartData: { project: string; hours: number; fill: string }[];
-    chartConfig: {
-      [key: string]: { label: string; color?: string };
-      hours: { label: string; color?: string };
-    };
-    date: string;
-    start: number;
+    chartData: ChartData | null;
+    chartConfig: ChartConfig | null;
+    date: string | null;
+    start: number | null;
   }[],
 ) {
   return generatedRange.map((value) => {
     const equivalentMappedData = mapData.find((penpotdata) => {
       return penpotdata.date == value;
     });
-    if (equivalentMappedData) return equivalentMappedData;
-    return {
-      chartData: null,
-      chartConfig: null,
-      date: value,
-      start: getTimestamp(value),
-    };
+
+    if (!equivalentMappedData) {
+      return {
+        chartData: null,
+        chartConfig: null,
+        date: value,
+        start: getTimestamp(value),
+      };
+    } else if (!equivalentMappedData.date || !equivalentMappedData.start) {
+      return {
+        chartData: null,
+        chartConfig: null,
+        date: value,
+        start: getTimestamp(value),
+      };
+    } else {
+      return equivalentMappedData;
+    }
   });
 }
 
@@ -280,8 +324,8 @@ export function getPieChartProjectsWorkedOnData3(
   range: "day" | "month" | "year",
   generatedRange: string[],
 ): {
-  chartData: ChartData;
-  chartConfig: ChartConfig;
+  chartData: ChartData | null;
+  chartConfig: ChartConfig | null;
   start: number;
   date: string;
 }[] {
@@ -309,7 +353,7 @@ export function getTotalCollaborators9(
     ...new Set(processedPenpotData.map((value) => value.collaborators).flat(2)),
   ].length;
   return {
-    title: "Total Collaborators worked with",
+    title: "Collaborators",
     content: `${totalCollaboratorsWorkedWith}`,
     icon: null,
   };
@@ -328,6 +372,15 @@ export function getProjectsWorkedOn10(
   };
 }
 
+export function calculateTotalTimeSpent(
+  processedPenpotData: PenpotDataProcessed[],
+): number {
+  let totalTimeSpent = 0;
+  processedPenpotData.forEach((value) => {
+    totalTimeSpent = totalTimeSpent + value.timespent!;
+  });
+  return totalTimeSpent;
+}
 export function getTotalTime11(
   processedPenpotData: PenpotDataProcessed[],
 ): TCard {
@@ -337,7 +390,7 @@ export function getTotalTime11(
   });
   return {
     title: "Total time spent",
-    content: `${totalTimeSpent}`,
+    content: `${totalTimeSpent} hours`,
     icon: null,
   };
 }
@@ -357,30 +410,31 @@ export function getCalendarHeatMapData7(
   processedPenpotData: PenpotDataProcessed[][],
   generatedRange: string[],
 ): TValues {
-  const { chartData: calendarHeatMapArray } = generateAreaChartDataAndConfigs(
+  const { chartData: calendarHeatMapArray } = generateCalendarData(
     "day",
     processedPenpotData,
     generatedRange,
   );
   const calendarArray = calendarHeatMapArray.map((value) => {
+    const count = (value.hours as number) * 1;
     return {
       date: value.day,
-      count: value.hours as number,
+      count: count,
     };
   });
-  const filledCalendarArray = generatedRange.map((value) => {
-    const equivalentCalendarArrayValue = calendarArray.find(
-      (calendarArrayValue) => {
-        return calendarArrayValue.date == value;
-      },
-    );
-    if (equivalentCalendarArrayValue) return equivalentCalendarArrayValue;
-    return {
-      date: value,
-      count: 0,
-    };
-  });
-  return filledCalendarArray;
+  // const filledCalendarArray = generatedRange.map((value) => {
+  //   const equivalentCalendarArrayValue = calendarArray.find(
+  //     (calendarArrayValue) => {
+  //       return calendarArrayValue.date == value;
+  //     },
+  //   );
+  //   if (equivalentCalendarArrayValue) return equivalentCalendarArrayValue;
+  //   return {
+  //     date: value,
+  //     count: 0,
+  //   };
+  // });
+  return calendarArray;
 }
 
 export function getPieChartAllProjects6(
@@ -415,7 +469,7 @@ export function getAreaChartTimeSpentData1(
     generateAreaChartDataAndConfigs(range, processedPenpotData, generatedRange);
   return { data: areaChartData, config: chartConfig };
 }
-function generateAreaChartDataAndConfigs(
+function generateCalendarData(
   range: "day" | "month" | "year",
   processedPenpotData: PenpotDataProcessed[][],
   generatedRange: string[],
@@ -434,6 +488,40 @@ function generateAreaChartDataAndConfigs(
   for (let i = 0; i < processedPenpotData.length; i++) {
     const penpotDataSegment = processedPenpotData[i];
     const areaChartDataEntry: AreaChartDataEntry = { day: "" };
+    if (penpotDataSegment.length == 0) continue;
+    areaChartDataEntry[range] = penpotDataSegment[0].datetime!;
+    const totalTimeSpentOnProject = calculateTotalTimeSpent(penpotDataSegment);
+    areaChartDataEntry["hours"] = totalTimeSpentOnProject;
+    areaChartData.push(areaChartDataEntry);
+  }
+  const filledAndSortedData = fillAndSortCalendarData(
+    generatedRange,
+    areaChartData,
+    range,
+  );
+  return { chartData: filledAndSortedData, chartConfigs: chartConfig };
+}
+function generateAreaChartDataAndConfigs(
+  range: "day" | "month" | "year",
+  processedPenpotData: PenpotDataProcessed[][],
+  generatedRange: string[],
+) {
+  const areaChartData: ({
+    day: string;
+  } & Record<string, string | number>)[] = [];
+  const chartConfig: {
+    [key: string]: { label: string; color?: string };
+    hours: { label: string; color?: string };
+  } = {
+    hours: {
+      label: "Hours",
+    },
+  };
+  console.log("processedPenpotData.length: ", processedPenpotData.length);
+  for (let i = 0; i < processedPenpotData.length; i++) {
+    const penpotDataSegment = processedPenpotData[i];
+    const areaChartDataEntry: AreaChartDataEntry = { day: "" };
+    if (penpotDataSegment.length == 0) continue;
     areaChartDataEntry[range] = penpotDataSegment[0].datetime!;
     const totalTimeSpentOnProject = aggregrateTotalTimeSpent(penpotDataSegment);
 
@@ -482,6 +570,22 @@ function fillAndSortCollaboratorChartData(
     };
     collaboratorDataEntry[range] = value;
     return collaboratorDataEntry;
+  });
+}
+function fillAndSortCalendarData(
+  generatedRange: string[],
+  areaChartData: ({ day: string } & Record<string, string | number>)[],
+  range: string,
+) {
+  return generatedRange.map((value) => {
+    const equivalentMappedData = areaChartData.find(
+      (chartdata) => chartdata[range] == value,
+    );
+    if (equivalentMappedData) return equivalentMappedData;
+    const emptyEntry: AreaChartDataEntry = { day: "" };
+    emptyEntry[range] = value;
+    emptyEntry["hours"] = 0;
+    return emptyEntry;
   });
 }
 function fillAndSortAreaChartData(
@@ -554,6 +658,7 @@ function aggregrateTotalTimeSpent(penpotDataSegment: PenpotDataProcessed[]) {
 export function segmentPenpotData(
   data: PenpotDataProcessed[],
   segmentBy: "year" | "month" | "day",
+  generatedRange: string[],
 ): PenpotDataProcessed[][] {
   const segmented: { [key: string]: PenpotDataProcessed[] } = {};
 
@@ -582,8 +687,10 @@ export function segmentPenpotData(
     }
     segmented[key].push(item);
   });
+  if (segmentBy == "month") console.log(segmented);
 
   const segmentedData = Object.values(segmented);
+  if (segmentBy == "month") console.log(segmentedData);
   const sortedInnerSegmentedData = segmentedData.map((segment) => {
     return segment.sort((a, b) => {
       return a.start - b.start;
@@ -593,7 +700,16 @@ export function segmentPenpotData(
     if (a.length == 0 || b.length == 0) return 0;
     return a[0].start - b[0].start;
   });
-  return sortedOuterSegmentedData;
+  return generatedRange.map((value) => {
+    const euivalentSortedSegmentedData = sortedOuterSegmentedData.find(
+      (outerSegmentValue) => {
+        return getDateFromStart(outerSegmentValue[0].start, segmentBy) == value;
+      },
+    );
+    if (euivalentSortedSegmentedData) return euivalentSortedSegmentedData;
+    return [];
+  });
+  // return sortedOuterSegmentedData;
 }
 
 export function processPenpotData(
@@ -601,14 +717,18 @@ export function processPenpotData(
 ): PenpotDataProcessed[] {
   const processedPenpotDataArray: PenpotDataProcessed[] = [];
 
-  for (let i = 0; i < rawPenpotData.length; i++) {
+  for (let i = 1; i < rawPenpotData.length; i++) {
     const rawPenpotDataUnit = rawPenpotData[i];
     const previousPenpotDataUnit = rawPenpotData[i - 1];
     const timedifference =
       rawPenpotDataUnit.start - previousPenpotDataUnit.start;
     const processedUnit: PenpotDataProcessed = {
       ...rawPenpotDataUnit,
-      timespent: timedifference < INACTIVE_THRESHOLD ? timedifference : 0,
+      timespent: parseFloat(
+        millisecondsToHours(
+          timedifference < INACTIVE_THRESHOLD ? timedifference : 0,
+        ).toFixed(2),
+      ),
     };
 
     processedPenpotDataArray.push(processedUnit);
@@ -639,9 +759,9 @@ export function generateRange(
   switch (range) {
     case "day": {
       const currentDay = new Date(today);
-      while (currentDay <= inputDate) {
+      while (currentDay >= inputDate) {
         result.push(currentDay.toISOString().split("T")[0]);
-        currentDay.setDate(currentDay.getDate() + 1);
+        currentDay.setDate(currentDay.getDate() - 1);
       }
       break;
     }
@@ -652,11 +772,11 @@ export function generateRange(
         inputDate.getFullYear(),
         inputDate.getMonth(),
       );
-      while (currentMonth <= targetMonth) {
+      while (currentMonth >= targetMonth) {
         const year = currentMonth.getFullYear();
         const month = (currentMonth.getMonth() + 1).toString().padStart(2, "0");
         result.push(`${year}-${month}`);
-        currentMonth.setMonth(currentMonth.getMonth() + 1);
+        currentMonth.setMonth(currentMonth.getMonth() - 1);
       }
       break;
     }
@@ -719,4 +839,22 @@ export function decryptString(key: string, encryptedString: string) {
     );
   }
   return decryptedText;
+}
+
+function getDateFromStart(start: number, segmentBy: "year" | "month" | "day") {
+  const date = new Date(start);
+  switch (segmentBy) {
+    case "day":
+      return date.toISOString().split("T")[0]; // YYYY-MM-DD
+    case "month":
+      return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, "0")}`; // YYYY-MM
+    case "year":
+      return date.getFullYear().toString();
+    default:
+      throw new Error(`Unsupported segmentBy value: ${segmentBy}`);
+  }
+}
+
+export function millisecondsToHours(milliseconds: number): number {
+  return milliseconds / (1000 * 60 * 60);
 }

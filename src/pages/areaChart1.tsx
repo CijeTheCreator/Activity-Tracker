@@ -15,10 +15,11 @@ export function AreaChartTimeSpent1({
   chartConfig,
   range,
 }: {
-  chartData: AreaChartData;
-  chartConfig: ChartConfig;
+  chartData: AreaChartData | null;
+  chartConfig: ChartConfig | null;
   range: "day" | "month" | "year";
 }) {
+  if (!chartData || !chartConfig) return <NoData />;
   const keys = [
     ...new Set(
       chartData
@@ -28,7 +29,6 @@ export function AreaChartTimeSpent1({
         .flat(1),
     ),
   ].filter((value) => value != range);
-  if (!chartData || !chartConfig) return <NoData />;
   return (
     <ChartContainer
       config={chartConfig}

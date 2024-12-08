@@ -80,12 +80,12 @@ function Plugin() {
   return (
     <div
       data-theme={theme}
-      className="flex flex-col gap-4 items-center p-4 dark"
+      className="flex flex-col gap-4 items-center p-4 dark w-full"
     >
       {isChecking ? (
         <Loader />
       ) : userKey ? (
-        <Tracking />
+        <Tracking userId={user!} />
       ) : (
         <FormContainer isPresent={isPresent} setUserKey={handleSetUserKey} />
       )}

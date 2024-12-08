@@ -8,7 +8,7 @@ export type TCard = {
   icon: ReactNode;
 };
 
-type TValue = {
+export type TValue = {
   date: string;
   count: number;
 };

@@ -11,12 +11,15 @@ export function HorizontalBarsProjectsWorkedOn2({
   chartData,
   chartConfig,
 }: {
-  chartData: ChartData;
-  chartConfig: ChartConfig;
+  chartData: ChartData | null;
+  chartConfig: ChartConfig | null;
 }) {
   if (!chartData || !chartConfig) return <NoData />;
   return (
-    <ChartContainer config={chartConfig}>
+    <ChartContainer
+      config={chartConfig}
+      // className="flex items-center justify-center"
+    >
       <BarChart
         accessibilityLayer
         data={chartData}

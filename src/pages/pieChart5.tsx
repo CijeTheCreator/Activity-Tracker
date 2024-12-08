@@ -12,8 +12,8 @@ export function PieChartActionsPerformed4({
   chartData,
   chartConfig,
 }: {
-  chartData: ActionData;
-  chartConfig: ChartConfig;
+  chartData: ActionData | null;
+  chartConfig: ChartConfig | null;
 }) {
   if (!chartData || !chartConfig) return <NoData />;
   return (

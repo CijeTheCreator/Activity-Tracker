@@ -13,6 +13,9 @@ import {
 } from "@/lib/types";
 import { useEffect, useState } from "react";
 import { Loader } from "@/components/Loader";
+import { generateRange } from "@/processing";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import { toast } from "sonner";
 
 export default function DashboardPage({
   totalTimeCardDayArray,
@@ -146,104 +149,166 @@ export default function DashboardPage({
   const [pieChart5chartConfigDMY, setPieChart5chartConfigDMY] =
     useState<ChartConfig | null>(null);
   const [range, setRange] = useState<string>("day");
+  const [datetime, setDateTime] = useState<string>("");
   const [configIndex, setConfigIndex] = useState<number>(0);
+  const [maxConfigIndex, setMaxConfigIndex] = useState<number>(0);
+
+  useEffect(() => {
+    updateCharts(
+      range,
+      setPieChart5chartConfigDMY,
+      pieChart5chartConfigDayArray,
+      configIndex,
+      setPieChart5chartDataDMY,
+      pieChart5chartDataDayArray,
+      setLineChart4chartConfigDMY,
+      lineChart4chartConfigDayArray,
+      setLineChart4chartDataDMY,
+      lineChart4chartDataDayArray,
+      setPieChart3chartConfigDMY,
+      pieChart3chartConfigDayArray,
+      setPieChart3chartDataDMY,
+      pieChart3chartDataDayArray,
+      setHorizontalBarsChartConfigDMY,
+      horizontalBarsChartConfigDayArray,
+      setHorizontalBarsChartDataDMY,
+      horizontalBarsChartDataDayArray,
+      setAreaChartConfigDMY,
+      areaChartConfigDayArray,
+      setAreaChartDataDMY,
+      areaChartDataDayArray,
+      setTotalActionsPerformedCardDMY,
+      totalActionsPerformedCardDayArray,
+      setCollaboratorsCardDMY,
+      collaboratorsCardDayArray,
+      setProjectsWorkedOnCardDMY,
+      projectsWorkedOnCardDayArray,
+      setTotalTimeCardDMY,
+      totalTimeCardDayArray,
+      pieChart5chartConfigMonthArray,
+      pieChart5chartDataMonthArray,
+      lineChart4chartConfigMonthArray,
+      lineChart4chartDataMonthArray,
+      pieChart3chartConfigMonthArray,
+      pieChart3chartDataMonthArray,
+      horizontalBarsChartConfigMonthArray,
+      horizontalBarsChartDataMonthArray,
+      areaChartConfigMonthArray,
+      areaChartDataMonthArray,
+      totalActionsPerformedCardMonthArray,
+      collaboratorsCardMonthArray,
+      projectsWorkedOnCardMonthArray,
+      totalTimeCardMonthArray,
+      pieChart5chartConfigYearArray,
+      pieChart5chartDataYearArray,
+      lineChart4chartConfigYearArray,
+      lineChart4chartDataYearArray,
+      pieChart3chartConfigYearArray,
+      pieChart3chartDataYearArray,
+      horizontalBarsChartConfigYearArray,
+      horizontalBarsChartDataYearArray,
+      areaChartConfigYearArray,
+      areaChartDataYearArray,
+      totalActionsPerformedCardYearArray,
+      collaboratorsCardYearArray,
+      projectsWorkedOnCardYearArray,
+      totalTimeCardYearArray,
+      setDateTime,
+      setMaxConfigIndex,
+    );
+  }, [configIndex]);
 
   useEffect(() => {
     setConfigIndex(0);
-    switch (range) {
-      case "day":
-        setPieChart5chartConfigDMY(pieChart5chartConfigDayArray[configIndex]);
-        setPieChart5chartDataDMY(pieChart5chartDataDayArray[configIndex]);
-        setLineChart4chartConfigDMY(lineChart4chartConfigDayArray);
-        setLineChart4chartDataDMY(lineChart4chartDataDayArray);
-        setPieChart3chartConfigDMY(pieChart3chartConfigDayArray[configIndex]);
-        setPieChart3chartDataDMY(pieChart3chartDataDayArray[configIndex]);
-        setHorizontalBarsChartConfigDMY(
-          horizontalBarsChartConfigDayArray[configIndex],
-        );
-        setHorizontalBarsChartDataDMY(
-          horizontalBarsChartDataDayArray[configIndex],
-        );
-        setAreaChartConfigDMY(areaChartConfigDayArray);
-        setAreaChartDataDMY(areaChartDataDayArray);
-        setTotalActionsPerformedCardDMY(
-          totalActionsPerformedCardDayArray[configIndex],
-        );
-        setCollaboratorsCardDMY(collaboratorsCardDayArray[configIndex]);
-        setProjectsWorkedOnCardDMY(projectsWorkedOnCardDayArray[configIndex]);
-        setTotalTimeCardDMY(totalTimeCardDayArray[configIndex]);
-        break;
-      case "month":
-        setPieChart5chartConfigDMY(pieChart5chartConfigMonthArray[configIndex]);
-        setPieChart5chartDataDMY(pieChart5chartDataMonthArray[configIndex]);
-        setLineChart4chartConfigDMY(lineChart4chartConfigMonthArray);
-        setLineChart4chartDataDMY(lineChart4chartDataMonthArray);
-        setPieChart3chartConfigDMY(pieChart3chartConfigMonthArray[configIndex]);
-        setPieChart3chartDataDMY(pieChart3chartDataMonthArray[configIndex]);
-        setHorizontalBarsChartConfigDMY(
-          horizontalBarsChartConfigMonthArray[configIndex],
-        );
-        setHorizontalBarsChartDataDMY(
-          horizontalBarsChartDataMonthArray[configIndex],
-        );
-        setAreaChartConfigDMY(areaChartConfigMonthArray);
-        setAreaChartDataDMY(areaChartDataMonthArray);
-        setTotalActionsPerformedCardDMY(
-          totalActionsPerformedCardMonthArray[configIndex],
-        );
-        setCollaboratorsCardDMY(collaboratorsCardMonthArray[configIndex]);
-        setProjectsWorkedOnCardDMY(projectsWorkedOnCardMonthArray[configIndex]);
-        setTotalTimeCardDMY(totalTimeCardMonthArray[configIndex]);
-        break;
-      case "year":
-        setPieChart5chartConfigDMY(pieChart5chartConfigYearArray[configIndex]);
-        setPieChart5chartDataDMY(pieChart5chartDataYearArray[configIndex]);
-        setLineChart4chartConfigDMY(lineChart4chartConfigYearArray);
-        setLineChart4chartDataDMY(lineChart4chartDataYearArray);
-        setPieChart3chartConfigDMY(pieChart3chartConfigYearArray[configIndex]);
-        setPieChart3chartDataDMY(pieChart3chartDataYearArray[configIndex]);
-        setHorizontalBarsChartConfigDMY(
-          horizontalBarsChartConfigYearArray[configIndex],
-        );
-        setHorizontalBarsChartDataDMY(
-          horizontalBarsChartDataYearArray[configIndex],
-        );
-        setAreaChartConfigDMY(areaChartConfigYearArray);
-        setAreaChartDataDMY(areaChartDataYearArray);
-        setTotalActionsPerformedCardDMY(
-          totalActionsPerformedCardYearArray[configIndex],
-        );
-        setCollaboratorsCardDMY(collaboratorsCardYearArray[configIndex]);
-        setProjectsWorkedOnCardDMY(projectsWorkedOnCardYearArray[configIndex]);
-        setTotalTimeCardDMY(totalTimeCardYearArray[configIndex]);
-        break;
-      default:
-        throw new Error(`Unsupported range`);
-    }
-  }, [range, configIndex]);
+    updateCharts(
+      range,
+      setPieChart5chartConfigDMY,
+      pieChart5chartConfigDayArray,
+      configIndex,
+      setPieChart5chartDataDMY,
+      pieChart5chartDataDayArray,
+      setLineChart4chartConfigDMY,
+      lineChart4chartConfigDayArray,
+      setLineChart4chartDataDMY,
+      lineChart4chartDataDayArray,
+      setPieChart3chartConfigDMY,
+      pieChart3chartConfigDayArray,
+      setPieChart3chartDataDMY,
+      pieChart3chartDataDayArray,
+      setHorizontalBarsChartConfigDMY,
+      horizontalBarsChartConfigDayArray,
+      setHorizontalBarsChartDataDMY,
+      horizontalBarsChartDataDayArray,
+      setAreaChartConfigDMY,
+      areaChartConfigDayArray,
+      setAreaChartDataDMY,
+      areaChartDataDayArray,
+      setTotalActionsPerformedCardDMY,
+      totalActionsPerformedCardDayArray,
+      setCollaboratorsCardDMY,
+      collaboratorsCardDayArray,
+      setProjectsWorkedOnCardDMY,
+      projectsWorkedOnCardDayArray,
+      setTotalTimeCardDMY,
+      totalTimeCardDayArray,
+      pieChart5chartConfigMonthArray,
+      pieChart5chartDataMonthArray,
+      lineChart4chartConfigMonthArray,
+      lineChart4chartDataMonthArray,
+      pieChart3chartConfigMonthArray,
+      pieChart3chartDataMonthArray,
+      horizontalBarsChartConfigMonthArray,
+      horizontalBarsChartDataMonthArray,
+      areaChartConfigMonthArray,
+      areaChartDataMonthArray,
+      totalActionsPerformedCardMonthArray,
+      collaboratorsCardMonthArray,
+      projectsWorkedOnCardMonthArray,
+      totalTimeCardMonthArray,
+      pieChart5chartConfigYearArray,
+      pieChart5chartDataYearArray,
+      lineChart4chartConfigYearArray,
+      lineChart4chartDataYearArray,
+      pieChart3chartConfigYearArray,
+      pieChart3chartDataYearArray,
+      horizontalBarsChartConfigYearArray,
+      horizontalBarsChartDataYearArray,
+      areaChartConfigYearArray,
+      areaChartDataYearArray,
+      totalActionsPerformedCardYearArray,
+      collaboratorsCardYearArray,
+      projectsWorkedOnCardYearArray,
+      totalTimeCardYearArray,
+      setDateTime,
+      setMaxConfigIndex,
+    );
+  }, [range]);
   const allArePresent =
     !totalTimeCardOverall ||
     !projectsWorkedOnCardOverall ||
     !collaboratorsCardOverall ||
     !totalActionsPerformedCardOverall ||
-    !pieChartAllProjects6ChartDataOverall ||
-    !pieChartAllProjects6ChartConfigOverall ||
-    !calendarValuesOverall ||
     !totalTimeCardDMY ||
     !projectsWorkedOnCardDMY ||
     !collaboratorsCardDMY ||
-    !totalActionsPerformedCardDMY ||
-    !areaChartDataDMY ||
-    !areaChartConfigDMY ||
-    !horizontalBarsChartDataDMY ||
-    !horizontalBarsChartConfigDMY ||
-    !pieChart3chartDataDMY ||
-    !pieChart3chartConfigDMY ||
-    !lineChart4chartDataDMY ||
-    !lineChart4chartConfigDMY ||
-    !pieChart5chartDataDMY ||
-    !pieChart5chartConfigDMY;
+    !totalActionsPerformedCardDMY;
   if (allArePresent) return <Loader />;
+
+  function handlePreviousDate(): void {
+    if (configIndex + 1 > maxConfigIndex) {
+      toast.error("You can't go further than this");
+      return;
+    }
+    setConfigIndex(configIndex + 1);
+  }
+
+  function handleNextDate(): void {
+    if (configIndex == 0) {
+      toast.error("You can't go further than this");
+      return;
+    }
+    setConfigIndex(configIndex - 1);
+  }
 
   return (
     <>
@@ -251,26 +316,34 @@ export default function DashboardPage({
         <div className="flex-1 space-y-4 p-8 pt-6">
           <div className="flex items-center justify-between space-y-2">
             <h2 className="text-3xl font-bold tracking-tight">
-              Chijioke's Penpot Activity
+              Your Penpot Activity
             </h2>
           </div>
           <Tabs
-            defaultValue="overall"
+            defaultValue="day"
             className="space-y-4"
             onValueChange={(value) => setRange(value)}
           >
-            <TabsList>
+            <TabsList className="flex flex-row gap-4">
               <TabsTrigger value="overall">Overall</TabsTrigger>
-              <TabsTrigger value="day" disabled>
-                Daily
-              </TabsTrigger>
-              <TabsTrigger value="month" disabled>
-                Monthly
-              </TabsTrigger>
-              <TabsTrigger value="year" disabled>
-                Yearly
-              </TabsTrigger>
+              <TabsTrigger value="day">Daily</TabsTrigger>
+              <TabsTrigger value="month">Monthly</TabsTrigger>
+              <TabsTrigger value="year">Yearly</TabsTrigger>
             </TabsList>
+            <div className="flex flex-row gap-4">
+              <div className="cursor-pointer" onClick={handlePreviousDate}>
+                <ArrowLeft />
+              </div>
+              <div>
+                <h4>{datetime}</h4>
+              </div>
+              <div>
+                <ArrowRight
+                  className="cursor-pointer"
+                  onClick={handleNextDate}
+                />
+              </div>
+            </div>
             <TabContentOverall
               totalTimeCard={totalTimeCardOverall}
               projectsWorkedOnCard={projectsWorkedOnCardOverall}
@@ -310,4 +383,160 @@ export default function DashboardPage({
       </div>
     </>
   );
+}
+function updateCharts(
+  range: string,
+  setPieChart5chartConfigDMY: React.Dispatch<React.SetStateAction<ChartConfig>>,
+  pieChart5chartConfigDayArray: ChartConfig[],
+  configIndex: number,
+  setPieChart5chartDataDMY: React.Dispatch<React.SetStateAction<ActionData>>,
+  pieChart5chartDataDayArray: ActionData[],
+  setLineChart4chartConfigDMY: React.Dispatch<
+    React.SetStateAction<ChartConfig>
+  >,
+  lineChart4chartConfigDayArray: ChartConfig,
+  setLineChart4chartDataDMY: React.Dispatch<
+    React.SetStateAction<CollaboratorData | null>
+  >,
+  lineChart4chartDataDayArray: CollaboratorData,
+  setPieChart3chartConfigDMY: React.Dispatch<React.SetStateAction<ChartConfig>>,
+  pieChart3chartConfigDayArray: ChartConfig[],
+  setPieChart3chartDataDMY: React.Dispatch<React.SetStateAction<ChartData>>,
+  pieChart3chartDataDayArray: ChartData[],
+  setHorizontalBarsChartConfigDMY: React.Dispatch<
+    React.SetStateAction<ChartConfig>
+  >,
+  horizontalBarsChartConfigDayArray: ChartConfig[],
+  setHorizontalBarsChartDataDMY: React.Dispatch<
+    React.SetStateAction<ChartData>
+  >,
+  horizontalBarsChartDataDayArray: ChartData[],
+  setAreaChartConfigDMY: React.Dispatch<React.SetStateAction<ChartConfig>>,
+  areaChartConfigDayArray: ChartConfig,
+  setAreaChartDataDMY: React.Dispatch<
+    React.SetStateAction<AreaChartData | null>
+  >,
+  areaChartDataDayArray: AreaChartData,
+  setTotalActionsPerformedCardDMY: React.Dispatch<
+    React.SetStateAction<TCard | null>
+  >,
+  totalActionsPerformedCardDayArray: TCard[],
+  setCollaboratorsCardDMY: React.Dispatch<React.SetStateAction<TCard | null>>,
+  collaboratorsCardDayArray: TCard[],
+  setProjectsWorkedOnCardDMY: React.Dispatch<
+    React.SetStateAction<TCard | null>
+  >,
+  projectsWorkedOnCardDayArray: TCard[],
+  setTotalTimeCardDMY: React.Dispatch<React.SetStateAction<TCard | null>>,
+  totalTimeCardDayArray: TCard[],
+  pieChart5chartConfigMonthArray: ChartConfig[],
+  pieChart5chartDataMonthArray: ActionData[],
+  lineChart4chartConfigMonthArray: ChartConfig,
+  lineChart4chartDataMonthArray: CollaboratorData,
+  pieChart3chartConfigMonthArray: ChartConfig[],
+  pieChart3chartDataMonthArray: ChartData[],
+  horizontalBarsChartConfigMonthArray: ChartConfig[],
+  horizontalBarsChartDataMonthArray: ChartData[],
+  areaChartConfigMonthArray: ChartConfig,
+  areaChartDataMonthArray: AreaChartData,
+  totalActionsPerformedCardMonthArray: TCard[],
+  collaboratorsCardMonthArray: TCard[],
+  projectsWorkedOnCardMonthArray: TCard[],
+  totalTimeCardMonthArray: TCard[],
+  pieChart5chartConfigYearArray: ChartConfig[],
+  pieChart5chartDataYearArray: ActionData[],
+  lineChart4chartConfigYearArray: ChartConfig,
+  lineChart4chartDataYearArray: CollaboratorData,
+  pieChart3chartConfigYearArray: ChartConfig[],
+  pieChart3chartDataYearArray: ChartData[],
+  horizontalBarsChartConfigYearArray: ChartConfig[],
+  horizontalBarsChartDataYearArray: ChartData[],
+  areaChartConfigYearArray: ChartConfig,
+  areaChartDataYearArray: AreaChartData,
+  totalActionsPerformedCardYearArray: TCard[],
+  collaboratorsCardYearArray: TCard[],
+  projectsWorkedOnCardYearArray: TCard[],
+  totalTimeCardYearArray: TCard[],
+  setDateTime: React.Dispatch<React.SetStateAction<string>>,
+  setMaxConfigIndex: React.Dispatch<React.SetStateAction<number>>,
+) {
+  const generatedDayRange = generateRange("day", 1730986775000);
+  const generatedMonthRange = generateRange("month", 1730986775000);
+  const generatedYearRange = generateRange("year", 1730986775000);
+  switch (range) {
+    case "day":
+      setMaxConfigIndex(generatedDayRange.length - 1);
+      setDateTime(generatedDayRange[configIndex]);
+      setPieChart5chartConfigDMY(pieChart5chartConfigDayArray[configIndex]);
+      setPieChart5chartDataDMY(pieChart5chartDataDayArray[configIndex]);
+      setLineChart4chartConfigDMY(lineChart4chartConfigDayArray);
+      setLineChart4chartDataDMY(lineChart4chartDataDayArray);
+      setPieChart3chartConfigDMY(pieChart3chartConfigDayArray[configIndex]);
+      setPieChart3chartDataDMY(pieChart3chartDataDayArray[configIndex]);
+      setHorizontalBarsChartConfigDMY(
+        horizontalBarsChartConfigDayArray[configIndex],
+      );
+      setHorizontalBarsChartDataDMY(
+        horizontalBarsChartDataDayArray[configIndex],
+      );
+      setAreaChartConfigDMY(areaChartConfigDayArray);
+      setAreaChartDataDMY(areaChartDataDayArray);
+      setTotalActionsPerformedCardDMY(
+        totalActionsPerformedCardDayArray[configIndex],
+      );
+      setCollaboratorsCardDMY(collaboratorsCardDayArray[configIndex]);
+      setProjectsWorkedOnCardDMY(projectsWorkedOnCardDayArray[configIndex]);
+      setTotalTimeCardDMY(totalTimeCardDayArray[configIndex]);
+      break;
+    case "month":
+      setMaxConfigIndex(generatedMonthRange.length - 1);
+      setDateTime(generatedMonthRange[configIndex]);
+      setPieChart5chartConfigDMY(pieChart5chartConfigMonthArray[configIndex]);
+      setPieChart5chartDataDMY(pieChart5chartDataMonthArray[configIndex]);
+      setLineChart4chartConfigDMY(lineChart4chartConfigMonthArray);
+      setLineChart4chartDataDMY(lineChart4chartDataMonthArray);
+      setPieChart3chartConfigDMY(pieChart3chartConfigMonthArray[configIndex]);
+      setPieChart3chartDataDMY(pieChart3chartDataMonthArray[configIndex]);
+      setHorizontalBarsChartConfigDMY(
+        horizontalBarsChartConfigMonthArray[configIndex],
+      );
+      setHorizontalBarsChartDataDMY(
+        horizontalBarsChartDataMonthArray[configIndex],
+      );
+      setAreaChartConfigDMY(areaChartConfigMonthArray);
+      setAreaChartDataDMY(areaChartDataMonthArray);
+      setTotalActionsPerformedCardDMY(
+        totalActionsPerformedCardMonthArray[configIndex],
+      );
+      setCollaboratorsCardDMY(collaboratorsCardMonthArray[configIndex]);
+      setProjectsWorkedOnCardDMY(projectsWorkedOnCardMonthArray[configIndex]);
+      setTotalTimeCardDMY(totalTimeCardMonthArray[configIndex]);
+      break;
+    case "year":
+      setMaxConfigIndex(generatedYearRange.length - 1);
+      setDateTime(generatedYearRange[configIndex]);
+      setPieChart5chartConfigDMY(pieChart5chartConfigYearArray[configIndex]);
+      setPieChart5chartDataDMY(pieChart5chartDataYearArray[configIndex]);
+      setLineChart4chartConfigDMY(lineChart4chartConfigYearArray);
+      setLineChart4chartDataDMY(lineChart4chartDataYearArray);
+      setPieChart3chartConfigDMY(pieChart3chartConfigYearArray[configIndex]);
+      setPieChart3chartDataDMY(pieChart3chartDataYearArray[configIndex]);
+      setHorizontalBarsChartConfigDMY(
+        horizontalBarsChartConfigYearArray[configIndex],
+      );
+      setHorizontalBarsChartDataDMY(
+        horizontalBarsChartDataYearArray[configIndex],
+      );
+      setAreaChartConfigDMY(areaChartConfigYearArray);
+      setAreaChartDataDMY(areaChartDataYearArray);
+      setTotalActionsPerformedCardDMY(
+        totalActionsPerformedCardYearArray[configIndex],
+      );
+      setCollaboratorsCardDMY(collaboratorsCardYearArray[configIndex]);
+      setProjectsWorkedOnCardDMY(projectsWorkedOnCardYearArray[configIndex]);
+      setTotalTimeCardDMY(totalTimeCardYearArray[configIndex]);
+      break;
+    default:
+      break;
+  }
 }

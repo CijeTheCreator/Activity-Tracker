@@ -17,7 +17,7 @@ function hasDaProperty(
 }
 penpot.ui.open("Activity Tracker", `?theme=${penpot.theme},`, {
   width: 320,
-  height: 630,
+  height: 445,
 });
 
 penpot.on("themechange", (theme) => {

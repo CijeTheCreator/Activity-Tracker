@@ -1,10 +1,11 @@
 import { useSearchParams } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CalculationCente } from "./CalculationCenter";
 import { PenpotDataRaw, TUserKeyForm } from "@/lib/types";
 import { fetchUserActivity } from "@/lib/server";
 import { DashboardLandingKeyEntryPage } from "./DashboardLanding";
 import { toast } from "sonner";
+import { LOGGERA as LOGGERA, LOGGERB } from "@/tests/debug";
 
 export function DashbaordLanding() {
   const [penpotDataRaw, setPenpotDataRaw] = useState<PenpotDataRaw[] | null>(
@@ -12,15 +13,25 @@ export function DashbaordLanding() {
   );
   const [searchParams] = useSearchParams();
   const userId = searchParams.get("userId");
-  const handleSubmitKey = async (data: TUserKeyForm) => {
+  useEffect(() => {
+    handleSubmitKey({ key: "1234" });
+  }, []);
+  const handleSubmitKey = async (data: TUserKeyForm): Promise<void> => {
+    let toastId;
     try {
-      const toastId = toast.loading("Fetching Data");
-      if (!userId) return <>No userId</>;
+      toastId = toast.message("Fetching Data");
+      if (!userId) {
+        toast.dismiss(toastId);
+        throw new Error("No User ID");
+      }
       const rawDataResponse = await fetchUserActivity(userId, data.key);
       toast.dismiss(toastId);
       toast.success("Activity Fetched");
       setPenpotDataRaw(rawDataResponse);
     } catch (error) {
+      const error_ = error as Error;
+      toast.error(error_.message);
+      toast.dismiss(toastId);
       console.log("Error fetching data");
     }
   };

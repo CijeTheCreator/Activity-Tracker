@@ -13,8 +13,8 @@ export function LineChartCollaborators3({
   chartConfig,
   range,
 }: {
-  chartData: CollaboratorData;
-  chartConfig: ChartConfig;
+  chartData: CollaboratorData | null;
+  chartConfig: ChartConfig | null;
   range: "day" | "month" | "year";
 }) {
   if (!chartData || !chartConfig) return <NoData />;
