@@ -1,7 +1,7 @@
 import { decryptString } from "@/processing";
 import axios from "axios";
 
-const ADDRESS = "http://localhost:3000";
+const ADDRESS = "https://activity-tracker-backend-wtih.onrender.com/";
 type result = {
   id: string;
   encryptedContent: string;
