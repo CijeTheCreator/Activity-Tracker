@@ -1,37 +1,36 @@
-# Paste to Replace: Effortless Element Replacement – Simplify Your Design Workflow
+# Penpot Activity Tracker: Private Insights into Your Workflow
 
-![Paste to Replace: Effortless Element Replacement – Simplify Your Design Workflow](/.github/images/thumb.png "Paste to Replace: Effortless Element Replacement – Simplify Your Design Workflow")
+![Penpot Activity Tracker: Private Insights into Your Workflow](/.github/images/thumb.png "Penpot Activity Tracker: Private Insights into Your Workflow")
 
 ## :toolbox: Getting Started
 
-1. Make sure **Git** and **NodeJS** is installed.
+1. Make sure **Git** and **NodeJS** are installed.
 2. Clone this repository to your local computer.
-3. run `npm install && npm run dev`
+3. Run `npm install && npm run dev`.
 
 ## Description
 
-The "Paste to Replace" Penpot plugin streamlines your design workflow by enabling you to replace elements effortlessly without resizing. The plugin features two buttons: **Copy Selection** and **Paste in Place**.
+The Penpot Activity Tracker plugin offers a privacy-focused way to monitor your design workflow. This tool allows you to track time spent on projects, view detailed activity logs, and gain insights into team collaborations. All activity data is decrypted locally for enhanced privacy before being securely synced with the server.
 
-1. **Copy Selection**:
+1. **Activity Logs**:
 
-   - Select a single element you want to copy.
-   - Click the **Copy Selection** button to capture it for pasting.
+   - Track time spent on each project and task.
+   - Access detailed logs to analyze productivity and trends.
 
-2. **Paste in Place**:
-   - Select one or more elements in your design where you want to paste the copied content.
-   - Click the **Paste in Place** button to replace the selected elements while maintaining their size and alignment.
-
-This tool simplifies repetitive tasks, ensuring you can update multiple elements simultaneously with precision and ease.
+2. **Collaboration Insights**:
+   - View contributions and collaborative activities across your team.
+   - Gain visibility into shared projects and joint efforts.
 
 ## Features
 
-1. **Paste to Replace**: Replace elements without resizing using Copy Selection and Paste in Place.
-2. **Multi-Element Pasting**: Copy one element and paste into multiple selections seamlessly.
-3. **Drag-and-Drop Support**: Replace elements by dragging or importing pictures directly.
-4. **Alignment Preservation**: Maintain size and alignment when pasting content.
-5. **Streamlined Workflow**: Simplify repetitive tasks for faster design updates.
+1. **Private Activity Tracking**: Monitor time, projects, and collaborations with secure local decryption.
+2. **Detailed Logs**: Access comprehensive activity data for better decision-making.
+3. **Collaboration Metrics**: Gain insights into team efforts and shared projects.
+4. **Streamlined Syncing**: Securely sync your activity data to the server for safe storage.
 
 ## :camera: Screenshots
 
-![Screenshot](/.github/images/screenshot1.png "Screenshot")
-![Screenshot](/.github/images/screenshot2.png "Screenshot")
+![Screenshot](/.github/images/ActivityTracker1.png "Track time spent and projects worked on")  
+![Screenshot](/.github/images/ActivityTracker2.png "Visualize collaboration insights and contributions")
+![Screenshot](/.github/images/ActivityTracker3.png "Visualize collaboration insights and contributions")
+![Screenshot](/.github/images/ActivityTracker4.png "Visualize collaboration insights and contributions")
