@@ -1,6 +1,6 @@
 {
-  "name": "React example plugin",
-  "description": "Example plugin with react",
+  "name": "Activity Tracker",
+  "description": "Track time spent on each project and task.",
   "code": "/plugin.js",
   "icon": "/icon.png",
   "permissions": [
